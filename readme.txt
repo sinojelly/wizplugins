@@ -3,8 +3,10 @@ WizKnowledge InsertCode Plugin
 Author: Chen Guodong  sinojelly@163.com
 
 在WizKnowledge中编辑文章时，可以插入漂亮的格式化代码的插件。
-参见：
+功能介绍：
 http://www.cnblogs.com/sinojelly/archive/2010/03/02/1676745.html
+开源项目(下载)：
+http://code.google.com/p/wizinsertcode/
 
 
 使用方法

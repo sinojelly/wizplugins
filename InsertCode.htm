@@ -140,25 +140,10 @@
         function InsertCode()
         {
         	//objDoc.body.innerText  // 这是直接修改文字内容,会把html标签显示到网页
-        	//objDoc.body.innerHTML = objDoc.body.innerHTML + 
-        	//"<PRE style=\"BACKGROUND-IMAGE: none; BORDER-BOTTOM: rgb(204,204,204) thin dotted; BORDER-LEFT: rgb(204,204,204) thin dotted; PADDING-BOTTOM: 0.4ex; LINE-HEIGHT: 1.33; OVERFLOW-X: auto; OVERFLOW-Y: auto; BACKGROUND-COLOR: rgb(247,249,250); TEXT-INDENT: 0px; MARGIN: 1ex 0px; PADDING-LEFT: 0.4ex; PADDING-RIGHT: 0.4ex; MAX-WIDTH: 99%; COLOR: rgb(0,0,0); MAX-HEIGHT: 40em; FONT-SIZE: 12px; BORDER-TOP: rgb(204,204,204) thin dotted; BORDER-RIGHT: rgb(204,204,204) thin dotted; PADDING-TOP: 0.4ex; -webkit-background-clip: initial; -webkit-background-origin: initial\" class=code>"
-        	//+insertText.value.replace(/\n/g,"<br>")+"</PRE>";
+        	//objDoc.body.innerHTML  // 这是html代码
         	
         	var sec = objDoc.selection.createRange();
-        	var tmpText = sec.text;
-        	var html = "";
-        	
-        	//var notSelect = (tmpText == null || tmpText.trim().length <= 0);
-        	//notSelect = true; // 必须为未选择文本，否则不应该弹出对话框，似乎比较难做了
-        	alert("test");
-        	if (true)//(notSelect) // 未选择文本
-        	{
-        		html = formatDokuwikiStyleCode(insertText.value.replace(/\n/g,"<br>"));
-        	}
-        	else
-        	{
-        		html = formatDokuwikiStyleCode(tmpText);
-        	}
+        	var html = formatDokuwikiStyleCode(insertText.value.replace(/\n/g,"<br>"));
         	
         	sec.pasteHTML(html);
         }

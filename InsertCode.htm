@@ -127,10 +127,14 @@
 
     <script language="JavaScript" type="text/jscript">
         //
-        var objEditor = window.external;  //获得外部对象，该对象是WizHtmlEditor实现的
-        var objDoc = objEditor.Document;  //这个是当前正在编辑的网页的文档对象
+        //var objEditor = window.external;  //获得外部对象，该对象是WizHtmlEditor实现的
+        //var objDoc = objEditor.Document;  //这个是当前正在编辑的网页的文档对象
         //var plugin_path = objEditor.PluginPath;   //这个是当前插件所在的路径
-        
+		var WizExplorerApp = window.external;
+		var objApp = WizExplorerApp;
+        var objWindow = objApp.Window;
+		var objDoc = objWindow.CurrentDocumentHtmlDocument;
+
         function formatDokuwikiStyleCode(str)
         {
         	return "<PRE style=\"BACKGROUND-IMAGE: none; BORDER-BOTTOM: rgb(204,204,204) thin dotted; BORDER-LEFT: rgb(204,204,204) thin dotted; PADDING-BOTTOM: 0.4ex; LINE-HEIGHT: 1.33; OVERFLOW-X: visible; OVERFLOW-Y: visible; BACKGROUND-COLOR: rgb(247,249,250); TEXT-INDENT: 0px; MARGIN: 1ex 0px; PADDING-LEFT: 0.4ex; PADDING-RIGHT: 0.4ex; MAX-WIDTH: 99%; COLOR: rgb(0,0,0); MAX-HEIGHT: none; FONT-SIZE: 12px; BORDER-TOP: rgb(204,204,204) thin dotted; BORDER-RIGHT: rgb(204,204,204) thin dotted; PADDING-TOP: 0.4ex; -webkit-background-clip: initial; -webkit-background-origin: initial\" class=code>"
@@ -154,7 +158,7 @@
                 InsertCode();
             }
             //
-            objEditor.CloseDialog(ret);
+            objApp.Window.CloseHtmlDialog(document, ret);
         }
         //
     </script>

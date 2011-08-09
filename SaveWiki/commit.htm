@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Google Code Wiki Commit</title>
+    <style type="text/css">
+    body {
+	font-family: Arial, Helvetica,Sans-serif;
+	color: black;
+	background-color: #fff;
+	font-size: 10.5pt;
+	margin: 1em;
+	padding: 1em;
+	line-height: 1.5;
+}
+div {
+	font-size: 1em;
+}
+table {
+	empty-cells: show;
+	margin: 0;
+	padding: 0;
+}
+font {
+	font-size: 1em;
+}
+ul {
+	padding: 0 0 1em 1em;
+}
+ol {
+	padding: 0 0 1em 1.3em;
+}
+li {
+	line-height: 1.5em;
+	padding: 0 0 0 0;
+}
+p {
+	padding: 0;
+}
+h1, h2, h3, h4, h5 {
+	padding: 0;
+}
+h1 {
+	font-size: 1.3em; /*1.3em*/
+}
+h2 {
+	font-size: 1.1em; /*1.3em*/
+}
+h3 {
+	font-size: 1em; /*1.1em;*/;
+	line-height: 1.4em;
+	white-space: nowrap;
+	padding: 0;
+}
+h4, h5, table {
+	font-size: 1em;
+}
+sup, sub {
+	font-size: .7em;
+}
+input, select, textarea, option {
+	font-family: inherit;
+	font-size: inherit;
+	margin: 0;
+	padding: 0;
+}
+img {
+	border-style: none;
+}
+a {
+	outline: none;
+	color: #00c;
+}
+a:active {
+	color: red;
+}
+a:visited {
+	color: #551a8b;
+}
+hr {
+	border: 0;
+	background-color: #EEE;
+	border-bottom: #c9d7f1 1px solid;
+	height: 0px;
+	width: 99.9%;
+	text-align: left;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+        #textAddress
+        {
+            width: 265px;
+        }
+        #textCategory
+        {
+            width: 265px;
+        }
+        #textPort
+        {
+            width: 60px;
+        }
+        #textImageWidth
+        {
+            width: 60px;
+        }
+        #selectAction
+        {
+            width: 265px;
+        }
+    </style>
+</head>
+<body>
+<table>
+	    <tr>
+            <td id="labelComment" align="left">comment</td>
+            <td><input id="textComment" type="text" /></td>
+        </tr>
+</table>
+    <p align="left">
+        <input id="buttonOK" onclick="CloseDialog(1);" 
+            style="width: 70px; padding-top:3px;" type="button" value="OK" />&nbsp;
+        <input id="buttonCancel" onclick="CloseDialog(2);" 
+            style="width: 70px; padding-top:3px;" type="button" value="Cancel" />
+    </p>
+<script language="JavaScript" type="text/javascript">
+	var objApp = window.external; 
+	var objComm = objApp.CreateWizObject("WizKMControls.WizCommonUI");
+	
+	function CombinePath(path, file) 
+	{
+		path = path.replace(/\//g, "\\");
+		file = file.replace(/\//g, "\\");
+		
+		if (path.charAt(path.length - 1) == '\\')
+		{
+			return path + file;
+		}
+		
+		return path + "\\" + file;
+	}
+		
+	function CombineUrl(url_base, file)
+	{
+		if (url_base.charAt(url_base.length - 1) == '/')
+		{
+			return url_base + file;
+		}
+		
+		return url_base + "/" + file;
+	}
+
+	function GetPictureUrl(url_base, html_tag)
+	{
+		var file = html_tag.substr(22, html_tag.length - 24);  // 去掉<IMG src="index_files/  和 ">
+		return CombineUrl(url_base, file);
+	}
+
+	// 把str中的src替换为dst，src后面紧跟except的除外
+	function ReplaceExcept(str, src, dst, except)
+	{
+		var index = 0;
+		var index2 = 0;
+		
+		while (index < str.length)
+		{
+			index2 = index;
+			index = str.indexOf(src, index2);
+			if (index != str.indexOf(src + except, index2))
+			{
+				var result = str.substr(0, index);
+				result += dst;
+				result += str.substr(index + src.length);
+				return result;
+			}
+			index = index + src.length;
+		}
+		
+		return str;
+	}
+
+	function InsertPicture(html, text, url_base)
+	{
+		var html_matchs = html.match(/<IMG src="index_files\/(.*)?.(png|jpg|jpeg|bmp|gif|ico)">/ig);		
+		
+		var text_re = /((参见下图)|(如图)|(如图所示)|(如下图所示))+[^\n]*\n/g;
+		var text_matchs = text.match(text_re);
+		
+		if (html_matchs == null || text_matchs == null) // 没有图片
+		{
+			return text;
+		}
+		
+		var length = Math.min(html_matchs.length, text_matchs.length);
+		
+		var auto_pic = "<wiki:comment>Picture added by Wiz2Wiki.</wiki:comment>";
+
+		for (i = 0; i < length; i++)
+		{			
+			text = ReplaceExcept( text, text_matchs[i]
+								, text_matchs[i] + auto_pic + "\n  " + GetPictureUrl(url_base, html_matchs[i]) + "\n"
+								, auto_pic + "\n  http://");  
+		}
+		
+		return text;
+	}
+	
+	function CreateFolders(fso, path)
+	{
+		var i = 0;
+		var arr = [];
+		while (!fso.FolderExists(path))
+		{
+			arr[i++] = path;
+			path = path.substring(0, path.lastIndexOf("\\"));
+		}
+		
+		for (i--; i >= 0; i--)
+		{
+			fso.CreateFolder(arr[i]);
+		}		
+	}
+
+	
+	function CopyPictures(doc, local_path, bare_file_name)
+	{
+		var fso = objApp.CreateActiveXObject("Scripting.FileSystemObject"); // 如果用new ActiveXObject("XXXX"); 则会弹出对话框让用户确认
+		
+		var temp_file = objComm.GetATempFileName(".html");
+		doc.SaveToHtml(temp_file, 1);
+		
+		var src_dir = temp_file.substr(0, temp_file.length - 5) + "_files";
+		
+		if (!fso.FolderExists(src_dir))
+		{
+			return;
+		}
+		
+		local_path = CombinePath(local_path, "images/" + bare_file_name);
+		CreateFolders(fso, local_path);
+		
+		// 避免拷贝模板附带的文件，凡是带有[]的，都认为是模板的文件，不拷贝。
+		var currentFolder = fso.GetFolder(src_dir);
+		var fileList = new Enumerator(currentFolder.files);
+		var aFile;
+		for (; !fileList.atEnd(); fileList.moveNext())
+		{
+			aFile=fileList.item();
+			if (/[^\[\]]+.(png|jpg|jpeg|bmp|gif|ico)/i.test(aFile.Name))
+			{
+				fso.CopyFile(aFile.Path, CombinePath(local_path, aFile.Name), true);
+			}
+		}
+		
+		//fso.CopyFolder(src_dir, CombinePath(local_path, "images/" + bare_file_name));
+	}
+	
+	function Commit() 
+	{    	        		
+		var objWindow = objApp.Window;
+		var objDoc = objWindow.CurrentDocument; //获得当前正在浏览的Wiz文档(WizDocument)
+		
+		var pluginPath = objApp.GetPluginPathByScriptFileName("SaveWiki.js");
+		
+		var file_name = objDoc.ParamValue("gocowiki_file_name");
+		var local_path = objDoc.ParamValue("gocowiki_local_path");
+		var remote_path = objDoc.ParamValue("gocowiki_remote_path");
+		var commit_cmd = objDoc.ParamValue("gocowiki_commit_cmd");
+		
+		if ((file_name == "") || (local_path == "")
+		 || (remote_path == "") || (commit_cmd == ""))
+		{
+		    alert("file_name local_path remote_path and commit_cmd can not be null, please set first!");
+		    var settings_dialog = pluginPath + "settings.htm";
+			objWindow.ShowHtmlDialog("settings", settings_dialog, 450, 300, "");
+			return;
+		}	
+		
+		var bare_file_name = file_name.substr(0, file_name.length - 5); // 去掉.wiki
+		CopyPictures(objDoc, local_path, bare_file_name);
+		
+		var url_base = CombineUrl(remote_path, "images/" + bare_file_name); 
+		var text = InsertPicture(objDoc.GetHtml(), objDoc.GetText(0), url_base)
+		text = text.replace(/\n\s*\n/g, "\n\n");  // 空行不能有空白字符, 否则它不会在wiki显示为换行，排版会比较乱
+		objComm.SaveTextToFile(CombinePath(local_path, file_name), text, "UTF-8");
+		objComm.RunExe(pluginPath + commit_cmd /*"hg_commit.bat"*/, local_path + " \"" + textComment.value + "\"", true);  // return 0 - sucsess
+    }
+
+    function CloseDialog(ret) 
+	{
+        if (ret == 1) 
+		{
+            Commit();
+        }
+        
+		var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+        objApp.Window.CloseHtmlDialog(document, ret);
+    }
+</script>    
+
+</body>
+</html>

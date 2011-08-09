@@ -1,0 +1,89 @@
+a:link { color: #0000cc; }
+body { background: #fff; margin: 0; font-size: 12px;}
+body, select, input { font-family: arial, sans-serif;}
+td td, th th, th td, td th { font-size: 100%;}
+pre { font-size: 110%; white-space: pre-line;}
+form { padding:0; margin:0;}
+
+table { border-collapse: separate; }
+
+h1 { font-size: x-large; margin-top: 0px; }
+h2 { font-size: large; padding-left: 0.5em; }
+h3 { font-size: medium; padding-left: 1.0em; }
+h4 { font-size: small; padding-left: 1.2em; }
+
+img { border: 0; }
+
+#wikicontent h3, #wikipreview h3 {
+  background: none;
+  border: 0;
+  padding-left:0;
+  margin: 0;
+}
+
+#wikicontent p, #wikicontent ul, #wikicontent ol, #wikicontent blockquote {
+  max-width: 65em;
+}
+
+#wikicontent ul, #wikicontent ol { padding-left: 40px; }
+
+table.wikitable { border-collapse: collapse; }
+.wikitable th { background: #e5ecf9; }
+.wikitable th, .wikitable td { border: 1px solid #aaa; padding: 5px; }
+
+
+.closed_ref { text-decoration: line-through }
+
+input { padding-left: 1px; padding-right: 1px; }
+textarea { padding-left: 1px; padding-right: 1px; }
+
+table {
+  border-spacing: 2px;
+  border-color: gray;
+}
+
+td {
+  border: 1px solid gray;
+  padding: 4px;
+}
+
+pre.prettyprint {
+  margin-left: 2em;
+  padding: 0.5em;
+  border-left: 3px solid #ccc;
+  background-color: #eee;
+    white-space: pre;
+}
+
+.prettyprint .str { color: #080; }
+.prettyprint .kwd { color: #008; }
+.prettyprint .com { color: #800; }
+.prettyprint .typ { color: #606; }
+.prettyprint .lit { color: #066; }
+.prettyprint .pun { color: #660; }
+.prettyprint .pln { color: #000; }
+.prettyprint .tag { color: #008; }
+.prettyprint .atn { color: #606; }
+.prettyprint .atv { color: #080; }
+.prettyprint .dec { color: #606; }
+
+@media print {
+  .prettyprint .str { color: #060; }
+  .prettyprint .kwd { color: #006; font-weight: bold; }
+  .prettyprint .com { color: #600; font-style: italic; }
+  .prettyprint .typ { color: #404; font-weight: bold; }
+  .prettyprint .lit { color: #044; }
+  .prettyprint .pun { color: #440; }
+  .prettyprint .pln { color: #000; }
+  .prettyprint .tag { color: #006; font-weight: bold; }
+  .prettyprint .atn { color: #404; }
+  .prettyprint .atv { color: #060; }
+}
+
+.labels {
+  color: green;
+}
+
+.summary {
+  font-style: italic;
+}

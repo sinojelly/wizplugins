@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Import Files</title>
+    <style type="text/css">
+        html
+        {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        body
+        {
+            font-family: Arial, Helvetica,Sans-serif;
+            color: black;
+            background-color: #fff;
+            font-size: 9pt;
+            margin: 0px;
+            padding: 1em;
+            line-height: 1.5;
+        }
+        div
+        {
+            font-size: 1em;
+        }
+        table
+        {
+            empty-cells: show;
+            margin: 0;
+            padding: 0;
+        }
+        font
+        {
+            font-size: 1em;
+        }
+        ul
+        {
+            padding: 0 0 0 0;
+        }
+        ol
+        {
+            padding: 0 0 0 0;
+        }
+        li
+        {
+            line-height: 1.5em;
+            padding: 0 0 0 0;
+        }
+        p
+        {
+            padding: 0;
+        }
+        h1, h2, h3, h4, h5
+        {
+            padding: 0;
+        }
+        h1
+        {
+            font-size: 1.3em; /*1.3em*/
+        }
+        h2
+        {
+            font-size: 1.1em; /*1.3em*/
+        }
+        h3
+        {
+            font-size: 1em;
+            line-height:1.1em;
+            white-space:nowrap;
+            padding:0;
+            font-weight:normal;
+        }
+        h4, h5, table
+        {
+            font-size: 1em;
+        }
+        sup, sub
+        {
+            font-size: .7em;
+        }
+        input, select, textarea, option
+        {
+            font-family: inherit;
+            font-size: inherit;
+            margin: 0;
+            padding: 0;
+        }
+        img
+        {
+            border-style: none;
+        }
+        a
+        {
+            outline: none;
+            color: #00c;
+        }
+        a:active
+        {
+            color: red;
+        }
+        a:visited
+        {
+            color: #551a8b;
+        }
+        hr
+        {
+            border: 0;
+            background-color: #EEE;
+            border-bottom: #c9d7f1 1px solid;
+            height: 0px;
+            width: 99.9%;
+            text-align: left;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+    </style>
+</head>
+<body>
+
+    <script language="javascript">
+
+
+        var WizExplorerApp = window.external;
+        //
+        var objApp = WizExplorerApp;
+        var objWindow = objApp.Window;
+        var objHtmlDocument = objWindow.CurrentDocumentHtmlDocument;
+        //
+        var pluginPath = objApp.GetPluginPathByScriptFileName("Outline.js");
+        var languangeFileName = pluginPath + "plugin.ini";
+        //
+        var htmltext = "";
+		
+		// support google code wiki
+		if (htmltext == "") {			
+			var arrNote = objHtmlDocument.getElementsByTagName("DIV");			
+			for (var i = 0; i < arrNote.length; i++) {
+				var elem = arrNote[i];
+				var pStr = elem.innerText;
+				if ( pStr.search(/^=+[^<>=]+=+$/)>-1 ) {  // 排除范围比较大的DIV，限制了标题不能有"<>"
+				htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+				}
+			}
+		}
+        //
+        if (htmltext == "") {
+            var arrLinks = objHtmlDocument.anchors;
+            for (var i = 0; i < arrLinks.length; i++) {
+                var elem = arrLinks[i];
+                //
+                var name = elem.name;
+                //
+                if (name == null || name == "") {
+                    continue;
+                }
+                //
+                var text = elem.innerText;
+                if (text == null || text == "") {
+                    text = name;
+                }
+                //
+                htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoBookmark('" + name + "');\">" + text + "</a></h3>";
+            }
+        }
+        //
+        if (htmltext == "") {
+            var arr = objHtmlDocument.all;
+            for (var i = 0; i < arr.length; i++) {
+                var elem = arr[i];
+                //
+                var tagName = elem.tagName.toLowerCase();
+                //
+                if (tagName == "h1") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                else if (tagName == "h2") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                else if (tagName == "h3") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                else if (tagName == "h4") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                else if (tagName == "h5") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                else if (tagName == "h6") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+            }
+        }
+        //
+        if (htmltext == "") {
+            var arr = objHtmlDocument.getElementsByTagName("STRONG");
+            for (var i = 0; i < arr.length; i++) {
+                var elem = arr[i];
+                //
+                var text = elem.innerText;
+                if (text != null && text != "") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                //
+            }
+        }
+        if (htmltext == "") {
+            var arr = objHtmlDocument.getElementsByTagName("B");
+            for (var i = 0; i < arr.length; i++) {
+                var elem = arr[i];
+                //
+                var text = elem.innerText;
+                if (text != null && text != "") {
+                    htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
+                }
+                //
+            }
+        }
+        if (htmltext == "") {
+            document.write("<h3>" + objApp.LoadStringFromFile(languangeFileName, "strNoOutlineData") + "</h3>");
+        }
+        else {
+            document.write(htmltext);
+        }
+        //
+        function gotoElem(pos) {
+            objHtmlDocument.parentWindow.scrollTo(objHtmlDocument.body.offsetLeft, pos);
+        }
+        //
+        function gotoBookmark(name) {
+            var elem = objHtmlDocument.getElementsByName(name);
+            if (elem == null)
+                return;
+            if (elem.length == "undefined") {
+                elem.scrollIntoView(true);
+            }
+            else {
+                elem[0].scrollIntoView(true);
+            }
+        }
+    </script>
+
+</body>
+</html>

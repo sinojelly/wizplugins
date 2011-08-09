@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html">
+<html>
+<head>
+<meta  charset=utf-8" />
+<style>
+html,body {overflow:visible;}
+body {
+margin: 0;
+background: #FFF;
+color: #666;
+}
+
+/* Root = Vertical, Secondary = Vertical */
+ul#navmenu,
+ul#navmenu li,
+ul#navmenu ul {
+  margin: 0;
+  border: 0 none;
+  padding: 0;
+  width: 160px; /*For KHTML*/
+  list-style: none;
+}
+
+ul#navmenu li {
+  display:inline-block;*display:inline;*zoom:1;
+  position: relative;
+}
+
+/* Root Menu */
+ul#navmenu a {
+  border: 1px solid #FFF;
+  border-right-color: #CCC;
+  border-bottom-color: #CCC;
+  padding: 0 6px;
+  display: block;
+  background: #EEE;
+  color: #000;
+  font: 13px/22px  "Microsoft YaHei",Arial, Helvetica, sans-serif;
+  letter-spacing:1px;
+  text-decoration: none;
+  height: auto !important;
+  height: 100%; /*For IE*/
+}
+
+/* Root Menu Hover Persistence */
+ul#navmenu a:hover,
+ul#navmenu li:hover a,
+ul#navmenu li.iehover a {
+  background: #CCC;
+  color: #FFF;
+}
+
+</style>
+<script type="text/javascript" src="GoogleCodeWikiParser.js"></script>
+</head>
+<body>
+<ul id="navmenu">
+  <li><a href="#" onclick="CloseDialog(1);return false">提交</a></li>
+  <li><a href="#" onclick="CloseDialog(2);return false">设置</a></li>
+  <li><a href="#" onclick="CloseDialog(3);return false">预览</a></li>
+</ul>
+
+<script language="JavaScript" type="text/javascript">
+	var objApp = window.external; 
+	var objWindow = objApp.Window;
+	var pluginPath = objApp.GetPluginPathByScriptFileName("SaveWiki.js");
+
+	function StartCommit() 
+	{    	        		
+		var commit_dialog = pluginPath + "commit.htm";
+		objWindow.ShowHtmlDialog("commit", commit_dialog, 350, 180, "");
+    }
+	
+    function StartSettings() 
+	{    	        		
+		var settings_dialog = pluginPath + "settings.htm";
+		objWindow.ShowHtmlDialog("settings", settings_dialog, 350, 250, "");
+    }
+	
+    function StartView() 
+	{
+	    var objDoc = objWindow.CurrentDocument; //获得当前正在浏览的Wiz文档(WizDocument)
+		var text = objDoc.GetText(0);
+		text = text.replace(/\n\s*\n/g, "\n\n");  // 空行不能有空白字符, 否则它不会在wiki显示为换行，排版会比较乱
+		var parser = new GoogleCodeWikiParser();
+		text = parser.parse(text);
+		text = "<html><head><link type=\"text/css\" rel=\"stylesheet\" href=\"GoCoWi-previewer.css\" /></head><body>" + text + "</body></html>";
+
+		var file_path = pluginPath + "tempwiki.htm";
+		var objComm = objApp.CreateWizObject("WizKMControls.WizCommonUI");
+		objComm.SaveTextToFile(file_path, text, "gb2312");
+		
+        objWindow.ViewHtml(file_path, true);	
+    }
+	
+    function CloseDialog(ret) 
+	{
+        if (ret == 1) 
+		{
+            StartCommit();
+        }
+        else if (ret == 2) 
+		{
+            StartSettings();
+        }
+        else if (ret == 3) 
+		{
+            StartView();
+        }		
+		
+        objApp.Window.CloseHtmlDialog(document, ret);
+    }
+
+</script>    
+
+</body>
+</html>

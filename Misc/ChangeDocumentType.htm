@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Change Document Type</title>
+    <style type="text/css">
+        html { overflow-x: hidden; overflow-y: hidden; } 
+        body
+        {
+            font-family: Arial, Helvetica,Sans-serif;
+            color: black;
+            background-color: #fff;
+            font-size: 10.5pt;
+            margin: 1em;
+            padding: 1em;
+            line-height: 1.5;
+        }
+        div
+        {
+            font-size: 1em;
+        }
+        table
+        {
+            empty-cells: show;
+            margin: 0;
+            padding: 0;
+        }
+        font
+        {
+            font-size: 1em;
+        }
+        ul
+        {
+            padding: 0 0 1em 1em;
+        }
+        ol
+        {
+            padding: 0 0 1em 1.3em;
+        }
+        li
+        {
+            line-height: 1.5em;
+            padding: 0 0 0 0;
+        }
+        p
+        {
+            padding: 0;
+        }
+        h1, h2, h3, h4, h5
+        {
+            padding: 0;
+        }
+        h1
+        {
+            font-size: 1.3em; /*1.3em*/
+        }
+        h2
+        {
+            font-size: 1.1em; /*1.3em*/
+        }
+        h3
+        {
+            font-size: 1em; /*1.1em;*/ ;line-height:1.4em;white-space:nowrap;padding:0;
+        }
+        h4, h5, table
+        {
+            font-size: 1em;
+        }
+        sup, sub
+        {
+            font-size: .7em;
+        }
+        input, select, textarea, option
+        {
+            font-family: inherit;
+            font-size: inherit;
+            margin: 0;
+            padding: 0;
+            width: 265px;
+        }
+        img
+        {
+            border-style: none;
+        }
+        a
+        {
+            outline: none;
+            color: #00c;
+        }
+        a:active
+        {
+            color: red;
+        }
+        a:visited
+        {
+            color: #551a8b;
+        }
+        hr
+        {
+            border: 0;
+            background-color: #EEE;
+            border-bottom: #c9d7f1 1px solid;
+            height: 0px;
+            width: 99.9%;
+            text-align: left;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+    </style>
+
+</head>
+<body>
+    <table style="width: 100%;">
+        <tr>
+            <td id="labelCurrent">
+                Current Type</td>
+            <td id="labelCurrentType">
+                &nbsp;
+            </td>
+        </tr>
+        <tr>
+            <td id="labelChangeTo">
+                Change to</td>
+            <td>
+                <select id="selectNewType" name="D2">
+                </select></td>
+        </tr>
+        </table>
+    <table style="width: 100%;">
+    </table>
+    <p align="right">
+        <table style="width:100%;">
+            <tr>
+                <td align="left">
+                    &nbsp;</td>
+                <td>
+    <p align="right">
+        <input id="buttonOK" onclick="CloseDialog(1);" style="width: 70px; padding-top: 3px;"
+            type="button" value="OK" />&nbsp;
+        <input id="buttonCancel" onclick="CloseDialog(2);" style="width: 70px; padding-top: 3px;"
+            type="button" value="Cancel" />
+    </p>
+                </td>
+            </tr>
+        </table>
+    </p>
+
+    <script language="JavaScript" type="text/jscript">
+        var objApp = window.external;
+        var objCommon = objApp.CreateWizObject("WizKMControls.WizCommonUI");
+
+        var database = objApp.Database;
+        //
+        var appGUID = objApp.GetPluginAppGUID(document);
+        //
+        var types = ["", "webpage", "wholewebpage", "note", "journal", "photo", "document", "draft", "article", "todolist"];
+        for (var i = 0; i < types.length; i++) {
+            var optionNew = document.createElement("OPTION");
+            optionNew.value = types[i];
+            if (optionNew.value == null || optionNew.value.length == 0) {
+                optionNew.text = objApp.LoadPluginString(appGUID, "empty");
+            }
+            else {
+                optionNew.text = objApp.LoadPluginString(appGUID, optionNew.value);
+            }
+            selectNewType.add(optionNew);
+        }
+        //
+        objApp.PluginLocalizeHtmlDialog(document);
+        //
+        var selected_documents = objApp.Window.DocumentsCtrl.SelectedDocuments;
+        if (null == selected_documents
+        || selected_documents.Count == 0) {
+            buttonOK.disabled = true;
+            alert(objApp.LoadPluginString(appGUID, "SelectOneDocument"));
+            CloseDialog(0);
+        }
+        else {
+            var oldType = selected_documents(0).Type;
+            //
+            labelCurrentType.innerHTML = oldType;
+        }
+		
+		function date2str(d){
+			var ret=d.getFullYear()+ "-";
+			ret+=( "00"+(d.getMonth()+1)).slice(-2)+ "-";
+			ret+=( "00"+d.getDate()).slice(-2);
+			return ret;
+		}
+        //
+        function ChangeDocumentType(type) {
+
+            var document_count = selected_documents.Count;
+            //
+            for (var i = 0; i < document_count; i++) {
+                var wiz_document = selected_documents.Item(i);
+                if (null == wiz_document)
+                    continue;
+                //
+                wiz_document.Type = type;
+				if (type == "todolist"){
+					wiz_document.ParamValue("TODOLIST_DATE")=date2str(new Date());
+				}
+            }
+        }
+        function CloseDialog(ret) {
+            if (ret == 1) {
+                ChangeDocumentType(selectNewType.value);
+            }
+            //
+            objApp.Window.CloseHtmlDialog(document, ret);
+        }
+        //
+    </script>
+
+</body>
+</html>

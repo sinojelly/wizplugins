@@ -152,7 +152,7 @@
         //
         var appGUID = objApp.GetPluginAppGUID(document);
         //
-        var types = ["", "webpage", "wholewebpage", "note", "journal", "photo", "document", "draft", "article", "todolist"];
+        var types = ["", "webpage", "wholewebpage", "note", "journal", "photo", "document", "draft", "article", "todolist2"];
         for (var i = 0; i < types.length; i++) {
             var optionNew = document.createElement("OPTION");
             optionNew.value = types[i];
@@ -197,9 +197,6 @@
                     continue;
                 //
                 wiz_document.Type = type;
-				if (type == "todolist"){
-					wiz_document.ParamValue("TODOLIST_DATE")=date2str(new Date());
-				}
             }
         }
         function CloseDialog(ret) {

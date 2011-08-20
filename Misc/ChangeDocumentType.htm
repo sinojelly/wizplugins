@@ -197,6 +197,10 @@
                     continue;
                 //
                 wiz_document.Type = type;
+				
+				if (type == "todolist2"){
+                    wiz_document.ParamValue("DefaultTodoList")="0";
+                }
             }
         }
         function CloseDialog(ret) {

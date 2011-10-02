@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Publish Document</title>
+    <style type="text/css">
+    body {
+	font-family: Arial, Helvetica,Sans-serif;
+	color: black;
+	background-color: #fff;
+	font-size: 10.5pt;
+	margin: 1em;
+	padding: 1em;
+	line-height: 1.5;
+}
+div {
+	font-size: 1em;
+}
+table {
+	empty-cells: show;
+	margin: 0;
+	padding: 0;
+}
+font {
+	font-size: 1em;
+}
+ul {
+	padding: 0 0 1em 1em;
+}
+ol {
+	padding: 0 0 1em 1.3em;
+}
+li {
+	line-height: 1.5em;
+	padding: 0 0 0 0;
+}
+p {
+	padding: 0;
+}
+h1, h2, h3, h4, h5 {
+	padding: 0;
+}
+h1 {
+	font-size: 1.3em; /*1.3em*/
+}
+h2 {
+	font-size: 1.1em; /*1.3em*/
+}
+h3 {
+	font-size: 1em; /*1.1em;*/;
+	line-height: 1.4em;
+	white-space: nowrap;
+	padding: 0;
+}
+h4, h5, table {
+	font-size: 1em;
+}
+sup, sub {
+	font-size: .7em;
+}
+input, select, textarea, option {
+	font-family: inherit;
+	font-size: inherit;
+	margin: 0;
+	padding: 0;
+}
+img {
+	border-style: none;
+}
+a {
+	outline: none;
+	color: #00c;
+}
+a:active {
+	color: red;
+}
+a:visited {
+	color: #551a8b;
+}
+hr {
+	border: 0;
+	background-color: #EEE;
+	border-bottom: #c9d7f1 1px solid;
+	height: 0px;
+	width: 99.9%;
+	text-align: left;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+        #textAddress
+        {
+            width: 265px;
+        }
+        #textCategory
+        {
+            width: 265px;
+        }
+        #textPort
+        {
+            width: 60px;
+        }
+        #textImageWidth
+        {
+            width: 60px;
+        }
+        #selectAction
+        {
+            width: 265px;
+        }
+    </style>
+</head>
+<body>
+<table>
+	        <tr>
+            <td id="labelCategory" align="right">
+                Category</td>
+            <td>
+                <input id="textCategory" type="text" /></td>
+        </tr>
+</table>
+    <p align="right">
+ 
+        <input id="buttonOK" onclick="CloseDialog(1);" 
+            style="width: 70px; padding-top:3px;" type="button" value="OK" />&nbsp;
+        <input id="buttonCancel" onclick="CloseDialog(2);" 
+            style="width: 70px; padding-top:3px;" type="button" value="Cancel" />
+    </p>
+<script language="JavaScript" type="text/javascript">
+    //
+    var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+    var objCommon = new ActiveXObject("WizKMControls.WizCommonUI");
+
+    //
+    var database = objApp.Database;
+    //
+    //
+    var appGUID = objApp.GetPluginAppGUID(document);
+    //var pluginPath = objApp.GetPluginAppPath(document);
+    //alert(plugin_path);
+    //
+    //
+    var settings_meta = "BatchPublishHtml";
+    //
+    var selected_documents = objApp.Window.DocumentsCtrl.SelectedDocuments;
+    if (null == selected_documents
+        || selected_documents.Count == 0) {
+        alert(objApp.LoadPluginString(appGUID, "SelectOneDocument"));
+        CloseDialog(0);
+    }
+    else {
+        //
+        settings_meta = "BatchPublishHtml_" + selected_documents.Item(0).Parent.RootFolder.Name;
+        //
+        textCategory.value = database.Meta(settings_meta, "Category");
+
+    }
+ 		function GetPluginPath() {
+        var url = document.URL;
+        //
+        if (document.location.protocol == "file:") {
+            var path = unescape(document.location.pathname);
+            path = path.replace(/\//g, "\\");
+            //
+            while (true) {
+                if (path.charAt(0) == '\\')
+                    path = path.substring(1, path.length);
+                else
+                    break;
+            }
+            //
+            var nPos = path.lastIndexOf("\\");
+            if (nPos != -1) {
+                path = path.substring(0, nPos + 1);
+            }
+            //
+            return path;
+        }
+    }
+    //
+    function PublishDocuments() {    	        
+        var category = textCategory.value;
+        if (category == "")
+        {
+        	  category = "Uncategorized";
+        }
+        //
+        //save settings to database
+        database.Meta(settings_meta, "Category") = category;
+        //
+        var document_count = selected_documents.Count;
+        //
+        
+        // jelly: if you see a flash of dos console , probably this tool_dir error.  or not install lxml python lib.
+        //var tool_dir = "%USERPROFILE%\\My Documents\\My Knowledge\\Plugins\\{A0D025CD-970A-4C62-97E4-5CF6F2C9DD6A}";
+        var tool_dir = GetPluginPath(); //pluginPath;
+        
+        
+        //var param_string = " \""+tool_dir+"BlogPost.py\" " + category + " ";
+        var param_string = category + " ";
+        for (var i = 0; i < document_count; i++) {
+            var wiz_document = selected_documents.Item(i);
+            if (null == wiz_document)
+                continue;
+            //alert(wiz_document.FileName);
+            
+            html_guid = wiz_document.ParamValue("BatchPublishHtml_GUID");
+            if (html_guid == "")
+            {
+            	  html_guid = "0";
+            }
+            
+            var html_file_name = objCommon.GetATempFileName("htm");
+            wiz_document.SaveToHtml(html_file_name, 0);
+            //alert(html_file_name); 
+            param_string +=  " \""+ html_file_name +"\" "+ html_guid;
+        }
+
+        //exec("python.exe \"D:\\Users\\Documents\\My Knowledge\\Plugins\\{A0D025CD-970A-4C62-97E4-5CF6F2C9DD6A}\\BlogPost.py\" \""+wiz_document.FileName+"\" 1234567890");
+        //var ret = objCommon.RunExe("python.exe",param_string, true); 
+        var ret = objCommon.RunExe(tool_dir+"BlogPost.exe",param_string, true); 
+        if (0 == ret) {
+					for (var i = 0; i < document_count; i++) {
+		            var wiz_document = selected_documents.Item(i);
+		            if (null == wiz_document)
+		                continue;
+		            //alert(wiz_document.FileName);
+		            
+		            html_guid = wiz_document.ParamValue("BatchPublishHtml_GUID");
+		            if (html_guid == "")
+		            {
+		            	  wiz_document.ParamValue("BatchPublishHtml_GUID") = objCommon.GetValueFromIni(tool_dir+"\\lastpost_guid.ini", "Common", "GUID"+i); // jelly: should be no quotes surround the file path.
+		            }					          
+		        }
+        }  
+        else
+        {
+        	  /*var fso=new ActiveXObject("Scripting.FileSystemObject"); 
+        		if (!fso.FileExists(tool_dir + "\\BlogPost.py")) 
+						{
+						    alert("Tool("+tool_dir + "\\BlogPost.py) not exist. please modify tool_dir in BatchPublishBlog.htm."); 
+						    return;
+						}*/
+        }
+    }
+    function CloseDialog(ret) {
+        if (ret == 1) {
+            PublishDocuments();
+        }
+        //
+        objApp.Window.CloseHtmlDialog(document, ret);
+    }
+    //
+    
+
+</script>    
+
+</body>
+</html>

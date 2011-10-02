@@ -1,4 +1,5 @@
 {*}/*
-BlogPost/*
-
-
+BlogPost/blogconfig.xml
+BlogPost/blogdata.xml
+BlogPost/runlog.txt
+BlogPost/lastpost_guid.ini

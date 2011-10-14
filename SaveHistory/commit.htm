@@ -150,7 +150,13 @@ hr {
 		var work_dir = objApp.LoadStringFromFile(pluginPath+"config.ini","work_dir");
 		var commit_cmd = objApp.LoadStringFromFile(pluginPath+"config.ini","commit_cmd");
 		
-		objComm.SaveTextToFile(CombinePath(work_dir, file_name), objDoc.GetText(0), "UTF-8");
+		var file_path = CombinePath(work_dir, file_name);
+		try {
+		    objComm.SaveTextToFile(file_path, objDoc.GetText(0), "UTF-8");
+		}catch (e) {
+		    alert("Write file (" + file_path + ") failed!");
+			return;
+		}
 		objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + textComment.value + "\"", true);  // return 0 - sucsess
     }
 
@@ -161,7 +167,8 @@ hr {
             Commit();
         }
         
-		var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+		//var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+		var objApp = window.external;
         objApp.Window.CloseHtmlDialog(document, ret);
     }
 </script>    

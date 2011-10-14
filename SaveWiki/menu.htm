@@ -68,13 +68,13 @@ ul#navmenu li.iehover a {
 	function StartCommit() 
 	{    	        		
 		var commit_dialog = pluginPath + "commit.htm";
-		objWindow.ShowHtmlDialog("commit", commit_dialog, 350, 180, "");
+		objWindow.ShowHtmlDialog("commit", commit_dialog, 350, 180, "", null);  // add the last parameter 'null' for wiz 2.0
     }
 	
     function StartSettings() 
 	{    	        		
 		var settings_dialog = pluginPath + "settings.htm";
-		objWindow.ShowHtmlDialog("settings", settings_dialog, 350, 250, "");
+		objWindow.ShowHtmlDialog("settings", settings_dialog, 350, 250, "", null);
     }
 	
     function StartView() 

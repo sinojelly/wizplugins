@@ -270,7 +270,7 @@ hr {
 		{
 		    alert("file_name local_path remote_path and commit_cmd can not be null, please set first!");
 		    var settings_dialog = pluginPath + "settings.htm";
-			objWindow.ShowHtmlDialog("settings", settings_dialog, 450, 300, "");
+			objWindow.ShowHtmlDialog("settings", settings_dialog, 450, 300, "", null);
 			return;
 		}	
 		
@@ -280,7 +280,15 @@ hr {
 		var url_base = CombineUrl(remote_path, "images/" + bare_file_name); 
 		var text = InsertPicture(objDoc.GetHtml(), objDoc.GetText(0), url_base)
 		text = text.replace(/\n\s*\n/g, "\n\n");  // 空行不能有空白字符, 否则它不会在wiki显示为换行，排版会比较乱
-		objComm.SaveTextToFile(CombinePath(local_path, file_name), text, "UTF-8");
+		
+		//objComm.SaveTextToFile(CombinePath(local_path, file_name), text, "UTF-8");
+		var file_path = CombinePath(local_path, file_name);
+		try {
+		    objComm.SaveTextToFile(file_path, text, "UTF-8");
+		}catch (e) {
+		    alert("Write file (" + file_path + ") failed!");
+			return;
+		}
 		objComm.RunExe(pluginPath + commit_cmd /*"hg_commit.bat"*/, local_path + " \"" + textComment.value + "\"", true);  // return 0 - sucsess
     }
 
@@ -291,7 +299,8 @@ hr {
             Commit();
         }
         
-		var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+		//var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+		var objApp = window.external;
         objApp.Window.CloseHtmlDialog(document, ret);
     }
 </script>    

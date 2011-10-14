@@ -144,8 +144,14 @@
 		function get_problems() {
 			htmltext += "<BR><B>Problem List</B><div  style='height:1px;background-color:#000000;line-height:1px;clear:both;display:block;overflow:hidden'></div>" ;
 			var arrNote = objHtmlDocument.getElementsByTagName("DIV");
+			var last_offsetTop = -1;
 			for (var i = 0; i < arrNote.length; i++) {
 				var elem = arrNote[i];
+				if ( elem.offsetTop == last_offsetTop )
+				{
+				    continue;
+				}
+				last_offsetTop = elem.offsetTop;
 				var pStr = elem.innerText;
 				if ( pStr.search(/^ÎÊÌâ(£º|:).*/)>-1 ) {
 				htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";

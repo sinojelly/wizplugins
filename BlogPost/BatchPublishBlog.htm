@@ -126,8 +126,9 @@ hr {
     </p>
 <script language="JavaScript" type="text/javascript">
     //
-    var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
-    var objCommon = new ActiveXObject("WizKMControls.WizCommonUI");
+    //var objApp = new ActiveXObject("WizExplorer.WizExplorerApp");
+	var objApp = window.external;
+    var objCommon = new ActiveXObject("WizKMControls.WizCommonUI"); // Wiz绿色版需要注册dll: regsvr32 WizKMControls.dll
 
     //
     var database = objApp.Database;

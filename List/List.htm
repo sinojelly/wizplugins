@@ -153,11 +153,17 @@
 				}
 				last_offsetTop = elem.offsetTop;
 				var pStr = elem.innerText;
-				if ( pStr.search(/^问题(：|:).*/)>-1 ) {
+				if ( have_problem(pStr) ) {
 				htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
 				htmltext += elem.title + "</div>";
 				}
 			}
+		}
+		
+		function have_problem(line) {
+		    if ( line.search(/^问题(：|:).*/) > -1 ) return true;  // 以"问题:"开头的行
+			if ( line.search(/【问题/) > -1) return true;          // 包含 "【问题"
+			return false;
 		}
 		
 		function get_emphasized() {

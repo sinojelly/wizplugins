@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1">
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <script type="text/javascript" src="jquery.sheet/jquery-1.8.3.min.js">
+    </script>
+    <script type="text/javascript" src="jquery.sheet/jquery.sheet.js">
+    </script>
+    <script type="text/javascript">
+        $.sheet.preLoad('jquery.sheet/');
+        $(function() {
+            $('#sheetParent').sheet();
+        });
+        //$('#sheetContent').toPrettySource();
+        function save() {      // for debuging
+            x = document.getElementById("sheetParent") //查找元素
+            y = document.getElementById("sheetContent");
+            var htmltext = x.innerHTML;
+            //var htmltext =document.all[0].innerHTML;
+            y.innerText = htmltext; //改变内容
+        }
+
+        var objApp = window.external;
+        var objDatabase = objApp.Database;
+        var objCommon = objApp.CreateWizObject("WizKMControls.WizCommonUI");
+        var objDoc = null;
+
+        var languageFileName = objApp.GetHtmlDocumentPath(document) + "wizsheet.ini";
+        function loadString(name) {
+            return objApp.LoadStringFromFile(languageFileName, name);
+        }
+
+        function formatInt(val) {
+            if (val < 10) return "0" + val;
+            else return "" + val;
+        }
+        String.prototype.trim = function() {
+            return this.replace(/^\s+|\s+$/g, "");
+        }
+        String.prototype.ltrim = function() {
+            return this.replace(/^\s+/, "");
+        }
+        String.prototype.rtrim = function() {
+            return this.replace(/\s+$/, "");
+        }
+        function DateToStr(dt) {
+            return "2013.2.24";
+        }
+        function saveToWiz() {
+            try {
+                saveToWizCore();
+                return true;
+            } catch(err) {
+                var msg = loadString("strCanNotSaveDocument");
+                alert(msg + "\n\n" + err.message);
+                return false;
+            }
+        }
+
+        function saveToWizCore() {
+            //var newNote = sheetParent.cloneNode(true);
+            //var htmltext = newNote.outerHTML;
+            //
+            x = document.getElementById("sheetParent");
+            //var htmltext =document.all[0].innerHTML;
+            var htmltext = x.innerHTML;
+            //
+            var date = null;
+            $(function() {
+                date = $("#date").datepicker("getDate");
+            });
+            var title = sheet_title.value;
+            //
+            //htmltext = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>" + title + "</title><!--WizHtmlContentBegin-->" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
+            var template_path = objApp.GetHtmlDocumentPath(document);
+            htmltext = "<html><head><!--WizHtmlContentBegin--><link rel=\"stylesheet\" type=\"text/css\" href=\""
+                    + template_path + "jquery.sheet/jquery.sheet.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\""
+                    + template_path + "jquery.sheet/jquery-ui/theme/jquery-ui.min.css\"><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
+                    + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
+
+            var location = "/My Journals/";
+            //
+            var objFolder = objDatabase.GetFolderByLocation(location, true);
+            //
+            if (objDoc == null) {
+                objDoc = objFolder.CreateDocument2(title, "");
+                objDoc.Type = "grid_diary";
+                objDoc.SetTagsText2(document.title, "");
+            }
+            //
+            if (objDoc.Location != location) {
+                objDoc.MoveTo(objFolder);
+            }
+            objDoc.ChangeTitleAndFileName(title);
+            objDoc.ParamValue("daily_review-date") = DateToStr(date) + " 00:00:00";
+            objDoc.UpdateDocument3(htmltext, 0);
+            //
+            var params = "/DatabasePath=" + objDatabase.DatabasePath + " /KbGUID=" + objDatabase.KbGUID + " /DocumentGUID=" + objDoc.GUID;
+            objApp.Window.ExecCommand("locatedocument", params);
+        }
+        //
+        var donotSave = false;
+        //
+        function onPluginWindowClosing() {
+            if (donotSave) return 0;
+            if (objDoc == null) {
+                var msg = loadString("strClosePrompt");
+                if (confirm(msg)) {
+                    if (!saveToWiz()) {
+                        return - 1;
+                    }
+                }
+            }
+            return 0;
+        }
+        //
+        function closeDialog(ret) {
+            if (ret == 1) {
+                if (!saveToWiz()) {
+                    return;
+                }
+            } else {
+                donotSave = true;
+            }
+            objApp.Window.CloseHtmlDialog(document, ret);
+        }
+
+        objApp.LocalizeHtmlDocument(languageFileName, document);
+        sheet_title.value = document.title;
+    </script>
+</head>
+
+<body>
+<input name="sheet_title" id="sheet_title" type="text" style="border: 0px; width: 100%;
+        margin-left: 5px; margin-right: 5px; font-weight: bold;" value="Sheet Title" />
+<div id="sheetParent">
+    <table>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</div>
+<div id="sheetContent">
+    nothing
+</div>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<p>
+</p>
+<button type="button" onclick="saveToWiz()">
+    点击这里
+</button>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+= Wiz Sheet =
+
+Wiz Sheet是在Wiz中快捷的进行简单表格编辑、保存的工具，内部使用 jQuery.Sheet 实现表格的绘制和编辑。
+参见：https://code.google.com/p/jquerysheet/
+
+jQuery.Sheet的功能很强大, 支持表格宽度调整、冻结、公式、绘制图表等等。
+Wiz下第一次编辑之后，暂时没有找到好的办法让javascript起作用，所以暂时只能实现简单的表格编辑、保存。
+
+== 安装 ==
+
+解压缩到 Wiz安装目录\templates\new 即可。
+解压缩后目录结构如下：
+Wiz安装目录\templates\new
+│  help.txt
+│  wizsheet.htm
+│  wizsheet.ini
+└─jquery.sheet
+
+安装后，重启 Wiz 即可。
+
+== 使用 ==
+
+1、新建笔记 -> Wiz表格，打开表格编辑器（默认11列, 100行，需要调整可在这个界面增删，之后不再可调整）
+
+2、可修改文章标题，表格中可以填上内容。（在这个界面上，jQuery.Sheet的功能都是有效的，但是没有测试过公式等功能在后面保存时是否有问题）
+
+3、点击保存关闭，就会把文章保存到 My Sheets 目录下。
+
+4、后面可点击编辑，用Wiz内部编辑器编辑表格内容，但是 jQuery.Sheet 的功能都是不生效的，只能修改表格内容。
+

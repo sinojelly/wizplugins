@@ -28,10 +28,6 @@ Wiz安装目录\templates\new
 
 4、后面可点击编辑，用Wiz内部编辑器编辑表格内容，但是 jQuery.Sheet 的功能都是不生效的，只能修改表格内容。
 
-此模板的源码也放在了：https://github.com/sinojelly/wizplugins
-欢迎有兴趣的同学继续完善!
-
-
 == 已知问题 ==
 
 1、一旦表格保存，就无法再调整行数、列数、列宽。
@@ -39,3 +35,5 @@ Wiz安装目录\templates\new
 2、单元格内容太长，就无法显示超出显示宽度的部分。
 
 
+此模板的源码也放在了：https://github.com/sinojelly/wizplugins
+欢迎有兴趣的同学继续完善!

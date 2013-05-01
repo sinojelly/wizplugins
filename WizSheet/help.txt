@@ -28,3 +28,5 @@ Wiz安装目录\templates\new
 
 4、后面可点击编辑，用Wiz内部编辑器编辑表格内容，但是 jQuery.Sheet 的功能都是不生效的，只能修改表格内容。
 
+此模板的源码也放在了：https://github.com/sinojelly/wizplugins
+欢迎有兴趣的同学继续完善!

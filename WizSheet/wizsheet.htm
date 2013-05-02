@@ -83,7 +83,23 @@
             var template_path = objApp.GetHtmlDocumentPath(document);
             htmltext = "<html><head><!--WizHtmlContentBegin--><link rel=\"stylesheet\" type=\"text/css\" href=\""
                     + template_path + "jquery.sheet/jquery.sheet.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\""
-                    + template_path + "jquery.sheet/jquery-ui/theme/jquery-ui.min.css\"><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
+                    + template_path + "jquery.sheet/jquery-ui/theme/jquery-ui.min.css\"><script type=\"text/javascript\" src=\""
+                    + template_path + "jquery.sheet/jquery-1.8.3.min.js\"><\/script><script type=\"text/javascript\" src=\""
+                    + template_path + "jquery.sheet/jquery.sheet.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/jquery-ui/ui/jquery-ui.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/globalize.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/parser/formula/formula.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/parser/tsv/tsv.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.mousewheel.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/raphael-min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/g.raphael-min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.colorPicker.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.elastic.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.sheet.advancedfn.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.sheet.financefn.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.sheet.dts.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/ZeroClipboard.js\"><\/script>"
+                    + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
 
             var location = "/My Sheets/";
@@ -144,7 +160,8 @@
         </td>
         <td style="">
             <input name="sheet_title" id="sheet_title" type="text" style="border: 0px; width: 100%;
-                    margin-left: 5px; margin-right: 5px; font-weight: bold;" value="Wiz Sheet Title" />
+                    margin-left: 5px; margin-right: 5px; font-weight: bold;" value="Wiz Sheet Title"
+                    onmouseover="this.focus()" onfocus="this.select()"/>
         </td>
         <td style="background: url('journal/tback_right.gif'); background-position: left;
                 width: 12px">

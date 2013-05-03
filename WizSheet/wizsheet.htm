@@ -19,6 +19,9 @@
         String.prototype.trimWidthHeight = function() {          // 必須放在使用位置之前
             return this.replace(/(WIDTH|width|HEIGHT|height):\s*\d*(px|PX);*/g, "");
         }
+        String.prototype.removejSEditPane = function() {          // 使得表格可编辑
+            return this.replace(/jSEditPane/g, "");
+        }
         function save() {      // for debuging
             x = document.getElementById("sheetParent") //查找元素
             y = document.getElementById("sheetContent");
@@ -72,6 +75,7 @@
             //var htmltext =document.all[0].innerHTML;
             var htmltext = x.innerHTML;
             htmltext = htmltext.trimWidthHeight();
+            htmltext = htmltext.removejSEditPane();
             //
             var date = null;
             $(function() {
@@ -81,7 +85,8 @@
             //
             //htmltext = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>" + title + "</title><!--WizHtmlContentBegin-->" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
             var template_path = objApp.GetHtmlDocumentPath(document);
-            htmltext = "<html><head><!--WizHtmlContentBegin--><link rel=\"stylesheet\" type=\"text/css\" href=\""
+            htmltext = "<html><head><!--WizHtmlContentBegin-->"
+                    + "<link rel=\"stylesheet\" type=\"text/css\" href=\""
                     + template_path + "jquery.sheet/jquery.sheet.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\""
                     + template_path + "jquery.sheet/jquery-ui/theme/jquery-ui.min.css\"><script type=\"text/javascript\" src=\""
                     + template_path + "jquery.sheet/jquery-1.8.3.min.js\"><\/script><script type=\"text/javascript\" src=\""
@@ -99,6 +104,7 @@
                     + template_path + "jquery.sheet/plugins/jquery.sheet.financefn.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.sheet.dts.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/ZeroClipboard.js\"><\/script>"
+                    + "<script type=\"text/javascript\"> $(function() { $('#sheetParent').sheet(); });<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
 
@@ -116,7 +122,7 @@
                 objDoc.MoveTo(objFolder);
             }
             objDoc.ChangeTitleAndFileName(title);
-            objDoc.UpdateDocument3(htmltext, 0);
+            objDoc.UpdateDocument3(htmltext, 0x0002);
             //
             var params = "/DatabasePath=" + objDatabase.DatabasePath + " /KbGUID=" + objDatabase.KbGUID + " /DocumentGUID=" + objDoc.GUID;
             objApp.Window.ExecCommand("locatedocument", params);

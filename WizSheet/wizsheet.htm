@@ -16,20 +16,14 @@
             $('#sheetParent').sheet();
         });
         //$('#sheetContent').toPrettySource();
-        String.prototype.trimWidthHeight = function() {          // 必須放在使用位置之前
-            return this.replace(/(WIDTH|width|HEIGHT|height):\s*\d*(px|PX);*/g, "");
-        }
-        String.prototype.removejSEditPane = function() {          // 使得表格可编辑
-            return this.replace(/jSEditPane/g, "");
-        }
+
         function save() {      // for debuging
             x = document.getElementById("sheetParent") //查找元素
             y = document.getElementById("sheetContent");
-            var htmltext = x.innerHTML;
-            //alert(htmltext.trimWidthHeight());
-            htmltext = htmltext.trimWidthHeight();
 
+            var htmltext = x.innerHTML;
             //var htmltext =document.all[0].innerHTML;
+            htmltext = $("table#jS_0_0").get(0).outerHTML;
             y.innerText = htmltext; //改变内容
         }
 
@@ -68,22 +62,11 @@
         }
 
         function saveToWizCore() {
-            //var newNote = sheetParent.cloneNode(true);
-            //var htmltext = newNote.outerHTML;
-            //
-            x = document.getElementById("sheetParent");
-            //var htmltext =document.all[0].innerHTML;
-            var htmltext = x.innerHTML;
-            htmltext = htmltext.trimWidthHeight();
-            htmltext = htmltext.removejSEditPane();
-            //
-            var date = null;
-            $(function() {
-                date = $("#date").datepicker("getDate");
-            });
+            var htmltext = $("table#jS_0_0").get(0).outerHTML;
+            htmltext = "<\/head><body><div id=\"sheetParent\">" + htmltext + "<\/div>";
+
             var title = sheet_title.value;
             //
-            //htmltext = "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>" + title + "</title><!--WizHtmlContentBegin-->" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
             var template_path = objApp.GetHtmlDocumentPath(document);
             htmltext = "<html><head><!--WizHtmlContentBegin-->"
                     + "<link rel=\"stylesheet\" type=\"text/css\" href=\""

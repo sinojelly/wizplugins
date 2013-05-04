@@ -7812,12 +7812,18 @@ var jSE = jQuery.sheet.engine = {
 		return jSE.columnLabelString(col) + (row || '');
 	},
 
-	/**
-	 * Available labels, used for their index
-	 * @memberOf jQuery.sheet.engine
-	 * @name columnLabels
-	 */
-	columnLabels:'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    /**
+     * Available labels, used for their index
+     * @memberOf jQuery.sheet.engine
+     * @name alphabet
+     */
+    alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),
+    /**
+     * Available labels, used for their index
+     * @memberOf jQuery.sheet.engine
+     * @name columnLabels
+     */
+    columnLabels: {},
 
 	/**
 	 * Get index of a column label
@@ -7827,14 +7833,7 @@ var jSE = jQuery.sheet.engine = {
 	 * @name columnLabelIndex
 	 */
 	columnLabelIndex:function (str) {
-		var num = 0,
-			str = str.toUpperCase();
-
-		for (var i = 0; i < str.length; i++) {
-			var digit = this.columnLabels.indexOf(str[i]);
-			num = (num * 26) + digit;
-		}
-		return (num >= 0 ? num : 0) + 1;
+        return this.columnLabels[str.toUpperCase()];
 	},
 
 	/**
@@ -7866,10 +7865,11 @@ var jSE = jQuery.sheet.engine = {
 						++i;
 					}
 				}
-				if (i >= 0) s += this.columnLabels[i];
-				if (j >= 0) s += this.columnLabels[j];
-				if (k >= 0) s += this.columnLabels[k];
-				this.columnIndexes[l] = s;
+                if (i >= 0) s += this.alphabet[i];
+                if (j >= 0) s += this.alphabet[j];
+                if (k >= 0) s += this.alphabet[k];
+                this.columnIndexes[l] = s;
+                this.columnLabels[s] = l;
 			}
 		}
 

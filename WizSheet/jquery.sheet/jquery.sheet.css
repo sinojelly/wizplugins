@@ -158,7 +158,7 @@
 
 .jSScroll {
 	position: absolute;
-	overflow: scroll;
+	overflow: hidden; /*scroll;*/
 	height: inherit;
 	width: inherit;
 }

@@ -13,7 +13,7 @@
     <script type="text/javascript">
         $.sheet.preLoad('jquery.sheet/');
         $(function() {
-            $('#sheetParent').sheet();
+            $('#sheetParent').height($(window).height() - 50).sheet();
         });
         //$('#sheetContent').toPrettySource();
 
@@ -23,7 +23,8 @@
 
             var htmltext = x.innerHTML;
             //var htmltext =document.all[0].innerHTML;
-            htmltext = $("table#jS_0_0").get(0).outerHTML;
+            //htmltext = $("table#jS_0_0").get(0).outerHTML;
+            htmltext = $("#sheetParent").get(0).outerHTML;
             y.innerText = htmltext; //改变内容
         }
 
@@ -62,6 +63,8 @@
         }
 
         function saveToWizCore() {
+            //var htmltext = $("#sheetParent").get(0).outerHTML;  //include sheetParent div node
+
             var htmltext = $("table#jS_0_0").get(0).outerHTML;
             htmltext = "<\/head><body><div id=\"sheetParent\">" + htmltext + "<\/div>";
 
@@ -87,9 +90,11 @@
                     + template_path + "jquery.sheet/plugins/jquery.sheet.financefn.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.sheet.dts.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/ZeroClipboard.js\"><\/script>"
-                    + "<script type=\"text/javascript\"> $(function() { $('#sheetParent').sheet(); });<\/script>"
+                    + "<script type=\"text/javascript\"> $(function() { $('#sheetParent').width(2000).height(2000).sheet(); });<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
+
+           // can not add  $('#sheetParent').getSheet().toggleFullScreen(); to make sheet full screen.
 
             var location = "/My Sheets/";
             //

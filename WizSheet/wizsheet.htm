@@ -8,7 +8,7 @@
     <meta content="utf-8" http-equiv="encoding">
     <script type="text/javascript" src="jquery.sheet/jquery-1.8.3.min.js">
     </script>
-    <script type="text/javascript" src="jquery.sheet/jquery.sheet.js">
+    <script type="text/javascript" src="jquery.sheet/jquery.sheet.min.js">
     </script>
     <script type="text/javascript">
         $.sheet.preLoad('jquery.sheet/');
@@ -73,23 +73,23 @@
             var template_path = objApp.GetHtmlDocumentPath(document);
             htmltext = "<html><head><!--WizHtmlContentBegin-->"
                     + "<link rel=\"stylesheet\" type=\"text/css\" href=\""
-                    + template_path + "jquery.sheet/jquery.sheet.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\""
+                    + template_path + "jquery.sheet/jquery.sheet.min.css\"><link rel=\"stylesheet\" type=\"text/css\" href=\""
                     + template_path + "jquery.sheet/jquery-ui/theme/jquery-ui.min.css\"><script type=\"text/javascript\" src=\""
                     + template_path + "jquery.sheet/jquery-1.8.3.min.js\"><\/script><script type=\"text/javascript\" src=\""
-                    + template_path + "jquery.sheet/jquery.sheet.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/jquery.sheet.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/jquery-ui/ui/jquery-ui.min.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/plugins/globalize.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/parser/formula/formula.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/parser/tsv/tsv.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/globalize.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/parser/formula/formula.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/parser/tsv/tsv.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.mousewheel.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/raphael-min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/g.raphael-min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.colorPicker.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.elastic.min.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/plugins/jquery.sheet.advancedfn.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/plugins/jquery.sheet.financefn.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/plugins/jquery.sheet.dts.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/plugins/ZeroClipboard.js\"><\/script>"
+                    + template_path + "jquery.sheet/plugins/jquery.sheet.advancedfn.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.sheet.financefn.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/jquery.sheet.dts.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/plugins/ZeroClipboard.min.js\"><\/script>"
                     + "<script type=\"text/javascript\"> $(function() { $('#sheetParent').width(2000).height(2000).sheet(); $.each($('table#jS_0_0 tr'), function(i){if(i == 1){this.style.display = 'none';}}); });<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";

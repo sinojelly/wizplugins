@@ -23,6 +23,23 @@ function updateWizSheet() {
     /*alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);*/
 }
 
+function checkVersion() {
+    var browser=navigator.appName
+    var b_version=navigator.appVersion
+    var version=parseFloat(b_version)
+    alert("Browser ："+ browser + "  Version ："+ version);
+}
+
+function dumpObj(obj) {
+    var description = "";
+    for (var i in obj) {
+        var property = obj[i];
+        description += i + " = " + property + "\n";
+
+    }
+    return (description);
+}
+
 function showDebugInfo(infoString) {      // for debuging
     var htmltext = infoString;
     if (htmltext == null) {

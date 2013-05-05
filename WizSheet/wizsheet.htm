@@ -42,8 +42,9 @@
 
         function saveToWizCore() {
             var htmltext = $("table#jS_0_0").get(0).outerHTML;
-            htmltext = "<\/head><body><div style='padding-bottom:0.5em;font-family: \"Microsoft YaHei\", Verdana,Arial,sans-serif; font-size: 10.0pt;color:gray'><input id='buttonSave' onclick='updateWizSheet();' style='width: 10em; height: 2em;' type='button' value='Save' />" +
-                    "&nbsp;&nbsp;&nbsp;&nbsp;刚编辑完还未失去焦点的单元格不会被保存<\/div>" +
+            htmltext = "<\/head><body><div style='padding-bottom:0.5em;font-family: \"Microsoft YaHei\", Verdana,Arial,sans-serif; font-size: 10.0pt;color:gray'>" +
+                    "<input disabled='disabled' id='buttonSave' onclick='updateWizSheet();' style='width: 10em; height: 2em;' type='button' value='Save' />" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;<b>[Save禁用:因为还未实现完成]<\/b>&nbsp;刚编辑完还未失去焦点的单元格不会被保存<\/div>" +
                     "<div id=\"sheetParent\">" + htmltext + "<\/div>";
 
             var title = sheet_title.value;

@@ -14,6 +14,7 @@
         $.sheet.preLoad('jquery.sheet/');
         $(function() {
             $('#sheetParent').height($(window).height() - 50).sheet();
+            $('.jSTabContainer').remove();
         });
 
         function showDebugInfo() {      // for debuging
@@ -78,7 +79,7 @@
                     + "$('div#sheetParent table').find('tr').eq(0).remove(); "
                     + "$('div#sheetParent table tr td:nth-child(1)').remove();"
                     + "$('div#sheetParent colgroup').find('col').eq(0).remove();"
-                    + "$('#sheetParent').width(2000).height(2000).sheet(); } });"
+                    + "$('#sheetParent').width(2000).height(2000).sheet();$('.jSTabContainer').remove(); } });"
                     + "function updateWizSheet() { var htmltext = $('table#jS_0_0').get(0).outerHTML;"
                     + "htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';"
                     + "/*$('#sheetParent').replaceWith(htmltext);*/"

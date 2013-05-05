@@ -10,30 +10,14 @@
     </script>
     <script type="text/javascript" src="jquery.sheet/jquery.sheet.min.js">
     </script>
+    <script type="text/javascript" src="jquery.sheet/wizsheet.js">
+    </script>
     <script type="text/javascript">
         $.sheet.preLoad('jquery.sheet/');
         $(function() {
             $('#sheetParent').height($(window).height() - 50).sheet();
             $('.jSTabContainer').remove();
         });
-
-        function showDebugInfo(infoString) {      // for debuging
-            var htmltext = infoString;
-            if (htmltext == null) {
-                //htmltext =document.all[0].innerHTML;
-                //htmltext = $("table#jS_0_0").get(0).outerHTML;
-                //htmltext = $('html')[0].outerHTML;
-                htmltext = $("#sheetParent").get(0).outerHTML;   //include sheetParent div node
-            }
-
-            var info = $('div#debugInfo')[0];
-            if (info) {  // exist, remove first
-                info.remove(0);
-            }
-            info = $('<div id=\"debugInfo\"></div>')[0];
-            $('body').append(info);
-            info.innerText = htmltext; // 直接用 .text(htmltext) 赋值会丢失格式
-        }
 
         var objApp = window.external;
         var objDatabase = objApp.Database;
@@ -43,29 +27,6 @@
         var languageFileName = objApp.GetHtmlDocumentPath(document) + "wizsheet.ini";
         function loadString(name) {
             return objApp.LoadStringFromFile(languageFileName, name);
-        }
-
-        /*
-         jQuery1830009167320928771594="72"
-         sizset="true" sizcache005113121418754335="2 7 0"
-         sizset="false" sizcache005113121418754335="11 22 22"
-        * */
-        String.prototype.removeJQueryAttri = function() {
-            return this.replace(/((jQuery|jquery)\d*=\"[\s\S]*?\")|(sizset=\"(true|false)\")|(sizcache\d*=\"[\s\S]*?\")/g, "");
-        }
-
-        function removeUselessAttri(obj) {
-            var htmltext =obj.get(0).innerHTML;
-            htmltext = htmltext.removeJQueryAttri();
-            obj.get(0).innerHTML = htmltext;
-            return obj;
-        }
-
-        // obj is jquery object
-        function removeUseless(obj) {
-            $('.jSMenu', obj).remove();
-            $('div#sheetParent ~ div', obj).remove();
-            return removeUselessAttri(obj);
         }
 
         function saveToWiz() {
@@ -106,23 +67,13 @@
                     + template_path + "jquery.sheet/plugins/jquery.sheet.advancedfn.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.sheet.financefn.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/jquery.sheet.dts.min.js\"><\/script><script src=\""
-                    + template_path + "jquery.sheet/plugins/ZeroClipboard.min.js\"><\/script>"
+                    + template_path + "jquery.sheet/plugins/ZeroClipboard.min.js\"><\/script><script src=\""
+                    + template_path + "jquery.sheet/wizsheet.js\"><\/script>"
                     + "<script type=\"text/javascript\"> $(function() { var isWindows = (navigator.platform == 'Win32') || (navigator.platform == 'Windows');if (isWindows) { "
                     + "$('div#sheetParent table').find('tr').eq(0).remove(); "
                     + "$('div#sheetParent table tr td:nth-child(1)').remove();"
                     + "$('div#sheetParent colgroup').find('col').eq(0).remove();"
                     + "$('#sheetParent').width(2000).height(2000).sheet();$('.jSTabContainer').remove(); } });"
-                    + "function updateWizSheet() { var htmltext = $('table#jS_0_0').get(0).outerHTML;"
-                    + "htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';"
-                    + "var html = $('html').get(0).cloneNode(true);var $html = $(html); $('#sheetParent', $html).replaceWith(htmltext);"
-                    + "$html = removeUseless($html);"
-                    + "showDebugInfo($html.get(0).outerHTML);"
-                    + "/*alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;"
-                    + "objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);*/ }"
-                    + "function showDebugInfo(infoString) {var info = $('div#debugInfo')[0];if (info) {info.remove(0);} info = $('<div id=\"debugInfo\"></div>')[0];$('body').append(info);info.innerText = infoString;}"
-                    + "function removeJQueryAttri(input) { return input.replace(/((jQuery|jquery)\\d*=\\\"[\\s\\S]*?\\\")|(sizset=\\\"(true|false)\\\")|(sizcache\\d*=\\\"[\\s\\S]*?\\\")/g, \"\");}"
-                    + "function removeUselessAttri(obj) { var inhtml = $('body', obj)[0].innerHTML;inhtml = removeJQueryAttri(inhtml); $('body', obj)[0].innerHTML = inhtml; return obj;}"
-                    + "function removeUseless(obj) {$('.jSMenu', obj).remove();$('div#sheetParent ~ div', obj).remove(); return removeUselessAttri(obj);}"
                     + "<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
@@ -149,19 +100,6 @@
         }
 
         var donotSave = false;
-
-        function updateWizSheet() {
-            var htmltext = $('table#jS_0_0').get(0).outerHTML;
-            htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';
-
-            var html = $('html').get(0).cloneNode(true);  // Clone HTML using DOM API
-            var $html = $(html);                     // Make jQuery object from cloned HTML
-            $('#sheetParent', $html).replaceWith(htmltext);
-            $html = removeUseless($html);
-
-            showDebugInfo($html.get(0).outerHTML);
-            //objDoc.UpdateDocument3($(this).html(), 0x0002);
-        }
 
         function onPluginWindowClosing() {
             if (donotSave) return 0;

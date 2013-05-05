@@ -142,27 +142,47 @@
         }
 		
 		function get_problems() {
-			htmltext += "<BR><B>Problem List</B><div  style='height:1px;background-color:#000000;line-height:1px;clear:both;display:block;overflow:hidden'></div>" ;
+			htmltext += "<BR><B>Problem List</B><div  style='height:1px;background-color:#000000;line-height:1px;clear:both;display:block;overflow:hidden'></div>";
 			var arrNote = objHtmlDocument.getElementsByTagName("DIV");
 			var last_offsetTop = -1;
 			for (var i = 0; i < arrNote.length; i++) {
 				var elem = arrNote[i];
-				if ( elem.offsetTop == last_offsetTop )
-				{
-				    continue;
+				
+				if (elem.offsetTop == last_offsetTop) {
+					continue;
 				}
 				last_offsetTop = elem.offsetTop;
-				var pStr = elem.innerText;
-				if ( have_problem(pStr) ) {
-				htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + elem.innerText + "</a></h3>";
-				htmltext += elem.title + "</div>";
+				
+				// 方法一：对于一个元素节点elem, 只考虑它的直接文本子节点, 其它不考虑，避免重复 ( 因为任何一段文本，总有它的直接父亲元素节点，不会遗漏) : 这种办法发现【已解决】三个字不是在文本节点出现
+				// 方法二：删除子的DIV节点，再看是否满足条件
+				var elemClone = elem.cloneNode(true);
+				var subElems = elemClone.getElementsByTagName("DIV");
+				while (subElems.length > 0) {
+					elemClone.removeChild(subElems[0]);
+					subElems = elemClone.getElementsByTagName("DIV");
+				}
+				//showDebugInfo(elemClone.innerText);
+
+				var pStr = elemClone.innerText;
+				if (have_problem(pStr)) {					
+					htmltext += "<h3><a href=\"javascript:void(0);\" onclick=\"gotoElem('" + elem.offsetTop + "');\">" + pStr.substring(0, 30) + "</a></h3>";
+					htmltext += elem.title + "</div>";
 				}
 			}
+		}
+
+		function showDebugInfo(infoString) { // for debuging
+			var info = objHtmlDocument.createElement("p");
+			info.innerText = "\nBegin-------------------------------------------------\n"
+                    		+ infoString
+							+ "\nEnd=======================================================\n";
+			objHtmlDocument.body.appendChild(info);
 		}
 		
 		function have_problem(line) {
 		    if ( line.search(/^问题(：|:).*/) > -1 ) return true;  // 以"问题:"开头的行
 			if ( line.search(/【问题/) > -1) return true;          // 包含 "【问题"
+			if ( line.search(/【未解决】/) > -1) return true;          // 包含 "【未解决】"
 			return false;
 		}
 		

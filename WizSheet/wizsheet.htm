@@ -16,13 +16,15 @@
             $('#sheetParent').height($(window).height() - 50).sheet();
         });
 
-        function save() {      // for debuging
-            y = document.getElementById("sheetContent");
-
+        function showDebugInfo() {      // for debuging
             //var htmltext =document.all[0].innerHTML;
             //var htmltext = $("table#jS_0_0").get(0).outerHTML;
+            //var htmltext = $('html')[0].outerHTML;
             var htmltext = $("#sheetParent").get(0).outerHTML;   //include sheetParent div node
-            y.innerText = htmltext; //改变内容
+
+            var info = $('<div></div>')[0];
+            info.innerText = htmltext; // 直接用 .text(htmltext) 赋值会丢失格式
+            $('body').append(info);
         }
 
         var objApp = window.external;
@@ -113,11 +115,6 @@
             htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';
             //$('#sheetParent').replaceWith(htmltext);
             //objDoc.UpdateDocument3($(this).html(), 0x0002);
-
-            y = document.getElementById("sheetContent");
-            //y.innerText = document.all[0].innerHTML;
-            //y.innerText = $("#sheetParent")[0].outerHTML;
-            y.innerText = $('html')[0].outerHTML;
         }
 
         function onPluginWindowClosing() {
@@ -168,8 +165,9 @@
     <tr>
         <td nowrap="nowrap">
             <div class="save" align="right">
-                <input id="buttonSave" onclick="updateWizSheet();" style="width: 10em; height: 2em;" type="button"
-                       value="Save" />&nbsp;
+                <!-- jelly: remove type=hidden to show debug button -->
+                <input type=hidden id="buttonDebug" onclick="showDebugInfo();" style="width: 10em; height: 2em;" type="button"
+                       value="Debug" />&nbsp;
                 <input id="buttonOK" onclick="closeDialog(1);" style="width: 10em; height: 2em;" type="button"
                        value="Save &amp; Close" />&nbsp;
                 <input id="buttonCancel" onclick="closeDialog(2);" style="width: 10em; height: 2em;"
@@ -1482,9 +1480,6 @@
         </tr>
     </table>
 </div>
-<div id="sheetContent">
-</div>
-
 </body>
 
 </html>

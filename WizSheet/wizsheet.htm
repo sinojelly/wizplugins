@@ -45,15 +45,27 @@
             return objApp.LoadStringFromFile(languageFileName, name);
         }
 
-        // 编辑后的每个单元格内容会产生一个 div
-        function removeCellContentDiv(obj) {
-         //</table></div>
+        /*
+         jQuery1830009167320928771594="72"
+         sizset="true" sizcache005113121418754335="2 7 0"
+         sizset="false" sizcache005113121418754335="11 22 22"
+        * */
+        String.prototype.removeJQueryAttri = function() {
+            return this.replace(/((jQuery|jquery)\d*=\"[\s\S]*?\")|(sizset=\"(true|false)\")|(sizcache\d*=\"[\s\S]*?\")/g, "");
+        }
+
+        function removeUselessAttri(obj) {
+            var htmltext =obj.get(0).innerHTML;
+            htmltext = htmltext.removeJQueryAttri();
+            obj.get(0).innerHTML = htmltext;
+            return obj;
         }
 
         // obj is jquery object
         function removeUseless(obj) {
             $('.jSMenu', obj).remove();
-            return obj;
+            $('div#sheetParent ~ div', obj).remove();
+            return removeUselessAttri(obj);
         }
 
         function saveToWiz() {
@@ -103,10 +115,14 @@
                     + "function updateWizSheet() { var htmltext = $('table#jS_0_0').get(0).outerHTML;"
                     + "htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';"
                     + "var html = $('html').get(0).cloneNode(true);var $html = $(html); $('#sheetParent', $html).replaceWith(htmltext);"
+                    + "$html = removeUseless($html);"
                     + "showDebugInfo($html.get(0).outerHTML);"
                     + "/*alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;"
                     + "objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);*/ }"
                     + "function showDebugInfo(infoString) {var info = $('div#debugInfo')[0];if (info) {info.remove(0);} info = $('<div id=\"debugInfo\"></div>')[0];$('body').append(info);info.innerText = infoString;}"
+                    + "function removeJQueryAttri(input) { return input.replace(/((jQuery|jquery)\\d*=\\\"[\\s\\S]*?\\\")|(sizset=\\\"(true|false)\\\")|(sizcache\\d*=\\\"[\\s\\S]*?\\\")/g, \"\");}"
+                    + "function removeUselessAttri(obj) { var inhtml = $('body', obj)[0].innerHTML;inhtml = removeJQueryAttri(inhtml); $('body', obj)[0].innerHTML = inhtml; return obj;}"
+                    + "function removeUseless(obj) {$('.jSMenu', obj).remove();$('div#sheetParent ~ div', obj).remove(); return removeUselessAttri(obj);}"
                     + "<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";

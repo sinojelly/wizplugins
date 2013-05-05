@@ -17,15 +17,22 @@
             $('.jSTabContainer').remove();
         });
 
-        function showDebugInfo() {      // for debuging
-            //var htmltext =document.all[0].innerHTML;
-            //var htmltext = $("table#jS_0_0").get(0).outerHTML;
-            //var htmltext = $('html')[0].outerHTML;
-            var htmltext = $("#sheetParent").get(0).outerHTML;   //include sheetParent div node
+        function showDebugInfo(infoString) {      // for debuging
+            var htmltext = infoString;
+            if (htmltext == null) {
+                //htmltext =document.all[0].innerHTML;
+                //htmltext = $("table#jS_0_0").get(0).outerHTML;
+                //htmltext = $('html')[0].outerHTML;
+                htmltext = $("#sheetParent").get(0).outerHTML;   //include sheetParent div node
+            }
 
-            var info = $('<div></div>')[0];
-            info.innerText = htmltext; // 直接用 .text(htmltext) 赋值会丢失格式
+            var info = $('div#debugInfo')[0];
+            if (info) {  // exist, remove first
+                info.remove(0);
+            }
+            info = $('<div id=\"debugInfo\"></div>')[0];
             $('body').append(info);
+            info.innerText = htmltext; // 直接用 .text(htmltext) 赋值会丢失格式
         }
 
         var objApp = window.external;
@@ -36,6 +43,17 @@
         var languageFileName = objApp.GetHtmlDocumentPath(document) + "wizsheet.ini";
         function loadString(name) {
             return objApp.LoadStringFromFile(languageFileName, name);
+        }
+
+        // 编辑后的每个单元格内容会产生一个 div
+        function removeCellContentDiv(obj) {
+         //</table></div>
+        }
+
+        // obj is jquery object
+        function removeUseless(obj) {
+            $('.jSMenu', obj).remove();
+            return obj;
         }
 
         function saveToWiz() {
@@ -51,7 +69,9 @@
 
         function saveToWizCore() {
             var htmltext = $("table#jS_0_0").get(0).outerHTML;
-            htmltext = "<\/head><body><div style='padding-bottom:0.5em;'><input id='buttonSave' onclick='updateWizSheet();' style='width: 10em; height: 2em;' type='button' value='Save' /><\/div><div id=\"sheetParent\">" + htmltext + "<\/div>";
+            htmltext = "<\/head><body><div style='padding-bottom:0.5em;font-family: \"Microsoft YaHei\", Verdana,Arial,sans-serif; font-size: 10.0pt;color:gray'><input id='buttonSave' onclick='updateWizSheet();' style='width: 10em; height: 2em;' type='button' value='Save' />" +
+                    "&nbsp;&nbsp;&nbsp;&nbsp;刚编辑完还未失去焦点的单元格不会被保存<\/div>" +
+                    "<div id=\"sheetParent\">" + htmltext + "<\/div>";
 
             var title = sheet_title.value;
             //
@@ -82,9 +102,12 @@
                     + "$('#sheetParent').width(2000).height(2000).sheet();$('.jSTabContainer').remove(); } });"
                     + "function updateWizSheet() { var htmltext = $('table#jS_0_0').get(0).outerHTML;"
                     + "htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';"
-                    + "/*$('#sheetParent').replaceWith(htmltext);*/"
-                    + "alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;"
-                    + "objDoc.UpdateDocument3($('html')[0].outerHTML, 0x0002); }<\/script>"
+                    + "var html = $('html').get(0).cloneNode(true);var $html = $(html); $('#sheetParent', $html).replaceWith(htmltext);"
+                    + "showDebugInfo($html.get(0).outerHTML);"
+                    + "/*alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;"
+                    + "objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);*/ }"
+                    + "function showDebugInfo(infoString) {var info = $('div#debugInfo')[0];if (info) {info.remove(0);} info = $('<div id=\"debugInfo\"></div>')[0];$('body').append(info);info.innerText = infoString;}"
+                    + "<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
 
@@ -114,7 +137,13 @@
         function updateWizSheet() {
             var htmltext = $('table#jS_0_0').get(0).outerHTML;
             htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';
-            //$('#sheetParent').replaceWith(htmltext);
+
+            var html = $('html').get(0).cloneNode(true);  // Clone HTML using DOM API
+            var $html = $(html);                     // Make jQuery object from cloned HTML
+            $('#sheetParent', $html).replaceWith(htmltext);
+            $html = removeUseless($html);
+
+            showDebugInfo($html.get(0).outerHTML);
             //objDoc.UpdateDocument3($(this).html(), 0x0002);
         }
 

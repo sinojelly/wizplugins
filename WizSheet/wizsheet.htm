@@ -48,7 +48,7 @@
 
         function saveToWizCore() {
             var htmltext = $("table#jS_0_0").get(0).outerHTML;
-            htmltext = "<\/head><body><div id=\"sheetParent\">" + htmltext + "<\/div>";
+            htmltext = "<\/head><body><div style='padding-bottom:0.5em;'><input id='buttonSave' onclick='updateWizSheet();' style='width: 10em; height: 2em;' type='button' value='Save' /><\/div><div id=\"sheetParent\">" + htmltext + "<\/div>";
 
             var title = sheet_title.value;
             //
@@ -76,7 +76,12 @@
                     + "$('div#sheetParent table').find('tr').eq(0).remove(); "
                     + "$('div#sheetParent table tr td:nth-child(1)').remove();"
                     + "$('div#sheetParent colgroup').find('col').eq(0).remove();"
-                    + "$('#sheetParent').width(2000).height(2000).sheet(); } });<\/script>"
+                    + "$('#sheetParent').width(2000).height(2000).sheet(); } });"
+                    + "function updateWizSheet() { var htmltext = $('table#jS_0_0').get(0).outerHTML;"
+                    + "htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';"
+                    + "/*$('#sheetParent').replaceWith(htmltext);*/"
+                    + "alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;"
+                    + "objDoc.UpdateDocument3($('html')[0].outerHTML, 0x0002); }<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";
 
@@ -102,7 +107,19 @@
         }
 
         var donotSave = false;
-        //
+
+        function updateWizSheet() {
+            var htmltext = $('table#jS_0_0').get(0).outerHTML;
+            htmltext = '<div id=\"sheetParent\">' + htmltext + '<\/div>';
+            //$('#sheetParent').replaceWith(htmltext);
+            //objDoc.UpdateDocument3($(this).html(), 0x0002);
+
+            y = document.getElementById("sheetContent");
+            //y.innerText = document.all[0].innerHTML;
+            //y.innerText = $("#sheetParent")[0].outerHTML;
+            y.innerText = $('html')[0].outerHTML;
+        }
+
         function onPluginWindowClosing() {
             if (donotSave) return 0;
             if (objDoc == null) {
@@ -151,7 +168,7 @@
     <tr>
         <td nowrap="nowrap">
             <div class="save" align="right">
-                <input id="buttonSave" onclick="save();" style="width: 10em; height: 2em;" type="button"
+                <input id="buttonSave" onclick="updateWizSheet();" style="width: 10em; height: 2em;" type="button"
                        value="Save" />&nbsp;
                 <input id="buttonOK" onclick="closeDialog(1);" style="width: 10em; height: 2em;" type="button"
                        value="Save &amp; Close" />&nbsp;

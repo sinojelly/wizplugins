@@ -79,3 +79,17 @@ function removeUseless(obj) {
     $('div#sheetParent ~ div', obj).remove();
     return removeUselessAttri(obj);
 }
+
+function supportSheet() {
+    return (navigator.platform == 'Win32') || (navigator.platform == 'Windows');
+}
+
+function loadSheet() {
+    if (supportSheet()) {
+        $('div#sheetParent table').find('tr').eq(0).remove();
+        $('div#sheetParent table tr td:nth-child(1)').remove();
+        $('div#sheetParent colgroup').find('col').eq(0).remove();
+        $('#sheetParent').width(2000).height(2000).sheet();
+        $('.jSTabContainer').remove();
+    }
+}

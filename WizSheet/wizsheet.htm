@@ -70,11 +70,7 @@
                     + template_path + "jquery.sheet/plugins/jquery.sheet.dts.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/plugins/ZeroClipboard.min.js\"><\/script><script src=\""
                     + template_path + "jquery.sheet/wizsheet.js\"><\/script>"
-                    + "<script type=\"text/javascript\"> $(function() { var isWindows = (navigator.platform == 'Win32') || (navigator.platform == 'Windows');if (isWindows) { "
-                    + "$('div#sheetParent table').find('tr').eq(0).remove(); "
-                    + "$('div#sheetParent table tr td:nth-child(1)').remove();"
-                    + "$('div#sheetParent colgroup').find('col').eq(0).remove();"
-                    + "$('#sheetParent').width(2000).height(2000).sheet();$('.jSTabContainer').remove(); } });"
+                    + "<script type=\"text/javascript\"> $(function() { loadSheet(); });"
                     + "<\/script>"
                     + "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'><title>"
                     + title + "</title>" + htmltext + "<!--WizHtmlContentEnd--></body></html>";

@@ -78,12 +78,12 @@ function supportSheet() {
     return (navigator.platform == 'Win32') || (navigator.platform == 'Windows');
 }
 
-function loadSheet() {
+function loadSheet(width, height) {
     if (supportSheet()) {
         $('div#sheetParent table').find('tr').eq(0).remove();
         $('div#sheetParent table tr td:nth-child(1)').remove();
         $('div#sheetParent colgroup').find('col').eq(0).remove();
-        $('#sheetParent').width(2000).height(2000).sheet();
+        $('#sheetParent').width(width).height(height).sheet();
         $('.jSTabContainer').remove();
     }
 }

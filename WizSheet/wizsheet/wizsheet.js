@@ -12,15 +12,13 @@ function updateWizSheet() {
     var htmltext = $('table#jS_0_0').get(0).outerHTML;
     htmltext = '<div id="sheetParent">' + htmltext + '</div>';
 
-    var html = $('html').get(0).cloneNode(true);  // Clone HTML using DOM API
-    var $html = $(html);                     // Make jQuery object from cloned HTML
+    $('#sheetParent', document).replaceWith(htmltext);
+    removeUseless(document);
 
-    $('#sheetParent', $html).replaceWith(htmltext);
-    $html = removeUseless($html);
-
-    // TODO: should add title and script to $html head. from current document's $('head')
-    showDebugInfo($html.get(0).outerHTML);
-    /*alert('暂时还未实现完成!');var objDoc = window.external.Window.CurrentDocumentHtmlDocument;objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);*/
+    var objDoc = window.external.Window.CurrentDocument;
+    objDoc.Type = "wholewebpage";   // avoid insert wiz css
+    //objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);  // this will remove link css
+    objDoc.UpdateDocument2(document, 0x0002);
 }
 
 function checkVersion() {
@@ -66,18 +64,14 @@ function showDebugInfo(infoString) {      // for debuging
 function removeJQueryAttri(input) {
     return input.replace(/((jQuery|jquery)\d*=\"[\s\S]*?\")|(sizset=\"(true|false)\")|(sizcache\d*=\"[\s\S]*?\")/g, "");
 }
-function removeUselessAttri(obj) {
-    var inhtml = $('body', obj)[0].innerHTML;
-    inhtml = removeJQueryAttri(inhtml);
-    $('body', obj)[0].innerHTML = inhtml;
-    return obj;
-}
 
 // obj is jquery object
 function removeUseless(obj) {
     $('.jSMenu', obj).remove();
     $('div#sheetParent ~ div', obj).remove();
-    return removeUselessAttri(obj);
+    var inhtml = $('body', obj)[0].innerHTML;
+    inhtml = removeJQueryAttri(inhtml);
+    $('body', obj)[0].innerHTML = inhtml;
 }
 
 function supportSheet() {

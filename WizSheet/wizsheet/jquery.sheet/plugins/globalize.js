@@ -109,7 +109,7 @@
 			// number of decimal places normally shown
 			decimals: 2,
 			// string that separates number groups, as in 1,000,000
-			",": ",",
+			",": "",  // jelly: change from , to nothing
 			// string that separates a number from the fractional portion, as in 1.99
 			".": ".",
 			// array of numbers indicating the size of each number group.
@@ -136,7 +136,7 @@
 				// TODO: more detailed description and example
 				groupSizes: [ 3 ],
 				// string that separates number groups, as in 1,000,000
-				",": ",",
+				",": "", // jelly: change from , to nothing
 				// string that separates a number from the fractional portion, as in 1.99
 				".": ".",
 				// symbol used to represent a percentage
@@ -153,7 +153,7 @@
 				// TODO: more detailed description and example
 				groupSizes: [ 3 ],
 				// string that separates number groups, as in 1,000,000
-				",": ",",
+				",": "",   // jelly: change from , to nothing
 				// string that separates a number from the fractional portion, as in 1.99
 				".": ".",
 				// symbol used to represent currency

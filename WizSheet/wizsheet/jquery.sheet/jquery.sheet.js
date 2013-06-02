@@ -430,7 +430,8 @@ jQuery.fn.extend({
 						if (!val.replace) {
 							return val || '';
 						}
-						var num = $.trim(val) * 1;
+						//var num = $.trim(val) * 1;  // jelly: it changes 123456789123456789123 to 123456789123456780000
+						var num = val;
 						if (!isNaN(num)) {
 							return globalize.format(num, "n10").replace(this.endOfNumber, function (orig, radix, num) {
 								return (num ? radix : '') + (num || '');

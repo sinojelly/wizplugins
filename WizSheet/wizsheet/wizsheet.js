@@ -18,7 +18,10 @@ function updateWizSheet() {
     var objDoc = window.external.Window.CurrentDocument;
     objDoc.Type = "wholewebpage";   // avoid insert wiz css
     //objDoc.UpdateDocument3($html.get(0).outerHTML, 0x0002);  // this will remove link css
-    objDoc.UpdateDocument2(document, 0x0002);
+    //alert(document.all[0].innerHTML); // confirm the valure is correct
+    //alert(dumpObj(document));
+    //objDoc.UpdateDocument2(document, 0x0002); // Work on IE, chrome does not support UpdateDocument2
+    objDoc.UpdateDocument4(document.all[0].outerHTML, document.URL, 0x0002);  // for IE and Chrome.  Must use whole path of the wiz doc, such as document.URL.
 }
 
 function checkVersion() {

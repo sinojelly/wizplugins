@@ -116,14 +116,22 @@ hr {
         </tr>
 </table>
     <p align="left">
-        <input id="buttonOK" onclick="CloseDialog(1);" 
-            style="width: 70px; padding-top:3px;" type="button" value="OK" />&nbsp;
-        <input id="buttonCancel" onclick="CloseDialog(2);" 
-            style="width: 70px; padding-top:3px;" type="button" value="Cancel" />
+	    <input type="button" onclick="okClicked();" value="OK" id="buttonOK" />
+        <input type="button" onclick="cancelClicked();" value="Cancel" id="buttonCancel" />
     </p>
 <script language="JavaScript" type="text/javascript">
 	var objApp = window.external; 
 	var objComm = objApp.CreateWizObject("WizKMControls.WizCommonUI");
+	
+		
+	function okClicked() {
+	    Commit();
+            objApp.Window.CloseHtmlDialog(document, "ok");
+        }
+        function cancelClicked() {
+            alert(objApp.LoadPluginString2(document, "Cancel clicked"));
+            objApp.Window.CloseHtmlDialog(document, "cancel");
+        }
 	
 	function CombinePath(path, file) 
 	{
@@ -143,7 +151,7 @@ hr {
 		var objWindow = objApp.Window;
 		var objDoc = objWindow.CurrentDocument; //获得当前正在浏览的Wiz文档(WizDocument)
 		
-		var pluginPath = objApp.GetPluginPathByScriptFileName("SaveHistory.js");
+		var pluginPath = objApp.AppPath+"Plugins\\Save.History\\";//objApp.GetPluginPathByScriptFileName("SaveHistory.js");
 		
 		var file_name = objDoc.Title + ".txt"; 
 		var tool_path = objApp.LoadStringFromFile(pluginPath+"config.ini","tool_path");

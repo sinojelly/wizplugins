@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head>
-    <title>Google Code Wiki Commit</title>
+    <title>Save history commit</title>
     <style type="text/css">
     body {
 	font-family: Arial, Helvetica,Sans-serif;
@@ -107,6 +107,7 @@ hr {
             width: 265px;
         }
     </style>
+	<script src="image_processor.js"></script>
 </head>
 <body>
 <table>
@@ -125,12 +126,12 @@ hr {
 	
 		
 	function okClicked() {
-	    Commit();
-            objApp.Window.CloseHtmlDialog(document, "ok");
+	        Commit();
+            objApp.Window.CloseHtmlDialog(WizChromeBrowser, "ok");
         }
         function cancelClicked() {
-            alert(objApp.LoadPluginString2(document, "Cancel clicked"));
-            objApp.Window.CloseHtmlDialog(document, "cancel");
+            alert(objApp.LoadPluginString2(WizChromeBrowser, "Cancel clicked"));
+            objApp.Window.CloseHtmlDialog(WizChromeBrowser, "cancel");
         }
 	
 	function CombinePath(path, file) 
@@ -146,6 +147,12 @@ hr {
 		return path + "\\" + file;
 	}
 	
+	function getMarkdownContent(html, text, doc_title)
+	{
+	    var url_base = "images/"+doc_title;
+	    return InsertPicture(html, text, url_base);
+	}
+	
 	function Commit() 
 	{    	        		
 		var objWindow = objApp.Window;
@@ -153,14 +160,15 @@ hr {
 		
 		var pluginPath = objApp.AppPath+"Plugins\\Save.History\\";//objApp.GetPluginPathByScriptFileName("SaveHistory.js");
 		
-		var file_name = objDoc.Title + ".txt"; 
+		var file_name = objDoc.Title; 
 		var tool_path = objApp.LoadStringFromFile(pluginPath+"config.ini","tool_path");
 		var work_dir = objApp.LoadStringFromFile(pluginPath+"config.ini","work_dir");
 		var commit_cmd = objApp.LoadStringFromFile(pluginPath+"config.ini","commit_cmd");
 		
 		var file_path = CombinePath(work_dir, file_name);
+		var markdown_content = getMarkdownContent(objDoc.GetHtml(), objDoc.GetText(0), objDoc.Title);
 		try {
-		    objComm.SaveTextToFile(file_path, objDoc.GetText(0), "UTF-8");
+		    objComm.SaveTextToFile(file_path, markdown_content, "UTF-8");
 		}catch (e) {
 		    alert("Write file (" + file_path + ") failed!");
 			return;

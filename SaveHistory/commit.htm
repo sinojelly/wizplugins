@@ -128,23 +128,10 @@ hr {
 	function okClicked() {
 	        Commit();
             objApp.Window.CloseHtmlDialog(WizChromeBrowser, "ok");
-        }
-        function cancelClicked() {
-            alert(objApp.LoadPluginString2(WizChromeBrowser, "Cancel clicked"));
-            objApp.Window.CloseHtmlDialog(WizChromeBrowser, "cancel");
-        }
-	
-	function CombinePath(path, file) 
-	{
-		path = path.replace(/\//g, "\\");
-		file = file.replace(/\//g, "\\");
-		
-		if (path.charAt(path.length - 1) == '\\')
-		{
-			return path + file;
-		}
-		
-		return path + "\\" + file;
+    }
+	function cancelClicked() {
+		//alert(objApp.LoadPluginString2(WizChromeBrowser, "Cancel clicked"));
+		objApp.Window.CloseHtmlDialog(WizChromeBrowser, "cancel");
 	}
 	
 	function getMarkdownContent(html, text, url_base)

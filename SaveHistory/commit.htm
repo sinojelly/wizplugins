@@ -147,9 +147,8 @@ hr {
 		return path + "\\" + file;
 	}
 	
-	function getMarkdownContent(html, text, doc_title)
+	function getMarkdownContent(html, text, url_base)
 	{
-	    var url_base = "images/"+doc_title;
 	    return InsertPicture(html, text, url_base);
 	}
 	
@@ -166,13 +165,16 @@ hr {
 		var commit_cmd = objApp.LoadStringFromFile(pluginPath+"config.ini","commit_cmd");
 		
 		var file_path = CombinePath(work_dir, file_name);
-		var markdown_content = getMarkdownContent(objDoc.GetHtml(), objDoc.GetText(0), objDoc.Title);
+		var pic_path = "images/"+objDoc.Title;
+		var markdown_content = getMarkdownContent(objDoc.GetHtml(), objDoc.GetText(0), pic_path);
 		try {
 		    objComm.SaveTextToFile(file_path, markdown_content, "UTF-8");
 		}catch (e) {
 		    alert("Write file (" + file_path + ") failed!");
 			return;
 		}
+		var image_dst_path = CombinePath(work_dir, pic_path)
+		CopyPictures(objDoc, image_dst_path);
 		objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + textComment.value + "\"", true);  // return 0 - sucsess
     }
 

@@ -49,30 +49,11 @@ function InsertLine(str, src, dst)
     return result;
 }
 
-function InsertPicture(pluginPath, work_dir, html, text, url_base)
+function InsertPicture(work_dir, url_base, html_matchs, text_matchs, text)
 {
-    //var html_matchs = html.match(/<IMG src="index_files\/(.*)?.(png|jpg|jpeg|bmp|gif|ico)">/ig);
-	var html_matchs = [];
-	var scriptFile = pluginPath + "get_imgs.js";
-	var objBrowser = objApp.Window.CurrentDocumentBrowserObject;
-	objBrowser.ExecuteScriptFile(scriptFile, function(ret){
-  	    if(ret && ret.length > 0){
-		    for(var i = 0; i < ret.length; i++){
-			    html_matchs.push(ret[i]);  
-		    }
-	    }
-	});
-
-    var text_matchs = text.match(/<img_location name="(.*)?">/ig);
-
-    if (html_matchs == null || text_matchs == null) // 没有图片
-    {
-        return text;
-    }
-
-	var image_dst_path = CombinePath(work_dir, url_base);
-	CopyPictures(html_matchs, image_dst_path);
-	
+    var image_dst_path = CombinePath(work_dir, url_base);
+    CopyPictures(html_matchs, image_dst_path);
+    
     var length = Math.min(html_matchs.length, text_matchs.length);
 
     for (i = 0; i < length; i++)
@@ -80,8 +61,40 @@ function InsertPicture(pluginPath, work_dir, html, text, url_base)
         text = InsertLine( text, text_matchs[i] + "\n"
             , "![" + GetPictureName(text_matchs[i]) + "](" + GetPictureUrl(url_base, GetSrcFileName(html_matchs[i])) + ")\n");
     }
-
     return text;
+}
+
+function saveContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, text) 
+{
+    try {
+        objComm.SaveTextToFile(file_path, text, "UTF-8");
+    }catch (e) {
+        alert("Write file (" + file_path + ") failed!");
+        return;
+    }
+    objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + comment + "\"", true);  // return 0 - sucsess
+}
+
+function ConstructMarkdownContentAndSave(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, html, text, url_base)
+{
+    //var html_matchs = html.match(/<IMG src="index_files\/(.*)?.(png|jpg|jpeg|bmp|gif|ico)">/ig);
+    var html_matchs = [];
+    var scriptFile = pluginPath + "get_imgs.js";
+    var objBrowser = objApp.Window.CurrentDocumentBrowserObject;
+    objBrowser.ExecuteScriptFile(scriptFile, function(ret){
+        if(ret && ret.length > 0){
+            for(var i = 0; i < ret.length; i++){
+                html_matchs.push(ret[i]);  
+            }
+        }
+        
+        var text_matchs = text.match(/<img_location name="(.*)?">/ig);
+        if (html_matchs.length > 0 && text_matchs.length > 0) // 有图片
+        {
+            text = InsertPicture(work_dir, url_base, html_matchs, text_matchs, text);
+        }
+        saveContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, text);
+    });
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -108,29 +121,29 @@ function PrepareCopyPictures(local_path)
 {
     var fso = objApp.CreateActiveXObject("Scripting.FileSystemObject"); // 如果用new ActiveXObject("XXXX"); 则会弹出对话框让用户确认
     CreateFolders(fso, local_path);
-	return fso;
+    return fso;
 }
 
 function CopyFile(fso, src_file, local_path)
 {
-	fso.CopyFile(src_file, CombinePath(local_path, GetSrcFileName(src_file)), true);
+    fso.CopyFile(src_file, CombinePath(local_path, GetSrcFileName(src_file)), true);
 }
 
 //https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
 function GetSrcFileName(src_file) 
 {
-	var splitTest = function (str) {
+    var splitTest = function (str) {
         return str.split('\\').pop().split('/').pop();
-	}
-	return splitTest(src_file);
+    }
+    return splitTest(src_file);
 }
 
 function CopyPictures(src_files, local_path)
 {
-	var i = 0;
+    var i = 0;
     var fso = PrepareCopyPictures(local_path);
-	for (i = 0; i < src_files.length; i++)
-	{
-		CopyFile(fso, src_files[i], local_path);
-	}
+    for (i = 0; i < src_files.length; i++)
+    {
+        CopyFile(fso, src_files[i], local_path);
+    }
 }

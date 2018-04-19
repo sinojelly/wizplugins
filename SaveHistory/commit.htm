@@ -124,19 +124,23 @@ hr {
 	var objApp = window.external; 
 	var objComm = objApp.CreateWizObject("WizKMControls.WizCommonUI");
 	
+	function closeDialogWhenOk()
+	{
+	    objApp.Window.CloseHtmlDialog(WizChromeBrowser, "ok");
+	}
 		
 	function okClicked() {
-	        Commit();
-            objApp.Window.CloseHtmlDialog(WizChromeBrowser, "ok");
+	    Commit();
+		setTimeout(closeDialogWhenOk, 1000); // close after save finished, about 1 second
     }
 	function cancelClicked() {
 		//alert(objApp.LoadPluginString2(WizChromeBrowser, "Cancel clicked"));
 		objApp.Window.CloseHtmlDialog(WizChromeBrowser, "cancel");
 	}
 	
-	function getMarkdownContent(pluginPath, work_dir, html, text, url_base)
+	function saveMarkdownContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, html, text, url_base)
 	{
-	    return InsertPicture(pluginPath, work_dir, html, text, url_base);
+	    ConstructMarkdownContentAndSave(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, html, text, url_base);
 	}
 	
 	function Commit() 
@@ -153,14 +157,7 @@ hr {
 		
 		var file_path = CombinePath(work_dir, file_name);
 		var pic_path = "images/"+objDoc.Title;
-		var markdown_content = getMarkdownContent(pluginPath, work_dir, objDoc.GetHtml(), objDoc.GetText(0), pic_path);
-		try {
-		    objComm.SaveTextToFile(file_path, markdown_content, "UTF-8");
-		}catch (e) {
-		    alert("Write file (" + file_path + ") failed!");
-			return;
-		}
-		objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + textComment.value + "\"", true);  // return 0 - sucsess
+		saveMarkdownContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, textComment.value, objDoc.GetHtml(), objDoc.GetText(0), pic_path);
     }
 
     function CloseDialog(ret) 

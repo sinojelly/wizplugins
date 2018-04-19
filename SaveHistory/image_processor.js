@@ -51,8 +51,8 @@ function InsertLine(str, src, dst)
 
 function InsertPicture(work_dir, url_base, html_matchs, text_matchs, text)
 {
-    var image_dst_path = CombinePath(work_dir, url_base);
-    CopyPictures(html_matchs, image_dst_path);
+    //var image_dst_path = CombinePath(work_dir, url_base);
+    //CopyPictures(html_matchs, image_dst_path);
     
     var length = Math.min(html_matchs.length, text_matchs.length);
 
@@ -72,7 +72,7 @@ function saveContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, com
         alert("Write file (" + file_path + ") failed!");
         return;
     }
-    objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + comment + "\"", true);  // return 0 - sucsess
+    //objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + comment + "\"", true);  // return 0 - sucsess
 }
 
 function ConstructMarkdownContentAndSave(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, html, text, url_base)
@@ -117,17 +117,6 @@ function CreateFolders(fso, path)
     }
 }
 
-function PrepareCopyPictures(local_path)
-{
-    var fso = objApp.CreateActiveXObject("Scripting.FileSystemObject"); // 如果用new ActiveXObject("XXXX"); 则会弹出对话框让用户确认
-    CreateFolders(fso, local_path);
-    return fso;
-}
-
-function CopyFile(fso, src_file, local_path)
-{
-    fso.CopyFile(src_file, CombinePath(local_path, GetSrcFileName(src_file)), true);
-}
 
 //https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
 function GetSrcFileName(src_file) 
@@ -138,12 +127,21 @@ function GetSrcFileName(src_file)
     return splitTest(src_file);
 }
 
-function CopyPictures(src_files, local_path)
+function CopyPictures(doc, local_path)
 {
-    var i = 0;
-    var fso = PrepareCopyPictures(local_path);
-    for (i = 0; i < src_files.length; i++)
+    var fso = objApp.CreateActiveXObject("Scripting.FileSystemObject"); // 如果用new ActiveXObject("XXXX"); 则会弹出对话框让用户确认
+
+    var temp_file = objComm.GetATempFileName(".html");
+    doc.SaveToHtml(temp_file, 1);
+
+    var src_dir = temp_file.substr(0, temp_file.length - 5) + "_files";
+
+    if (!fso.FolderExists(src_dir))
     {
-        CopyFile(fso, src_files[i], local_path);
+        return;
     }
+
+    CreateFolders(fso, local_path);
+
+    fso.CopyFolder(src_dir, local_path, true);
 }

@@ -126,6 +126,19 @@ hr {
 	
 	function closeDialogWhenOk()
 	{
+	    var objWindow = objApp.Window;
+	    var objDoc = objWindow.CurrentDocument; //获得当前正在浏览的Wiz文档(WizDocument)
+				
+		var pluginPath = objApp.AppPath+"Plugins\\Save.History\\";//objApp.GetPluginPathByScriptFileName("SaveHistory.js");
+		var tool_path = objApp.LoadStringFromFile(pluginPath+"config.ini","tool_path");
+	    var work_dir = objApp.LoadStringFromFile(pluginPath+"config.ini","work_dir");
+		var commit_cmd = objApp.LoadStringFromFile(pluginPath+"config.ini","commit_cmd");
+		
+		var pic_path = "images/"+objDoc.Title;
+    	var image_dst_path = CombinePath(work_dir, pic_path)
+		CopyPictures(objDoc, image_dst_path);
+		objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + textComment.value + "\"", true);  // return 0 - sucsess
+
 	    objApp.Window.CloseHtmlDialog(WizChromeBrowser, "ok");
 	}
 		

@@ -26,10 +26,9 @@ function CombineUrl(url_base, file)
     return url_base + "/" + file;
 }
 
-function GetPictureUrl(url_base, html_tag)
+function GetPictureUrl(url_base, html_tag) // html_tag is filename
 {
-    var file = html_tag.substr(22, html_tag.length - 24);  // 去掉<IMG src="index_files/  和 ">
-    return CombineUrl(url_base, file);
+    return CombineUrl(url_base, html_tag);
 }
 
 function GetPictureName(html_tag)
@@ -50,9 +49,19 @@ function InsertLine(str, src, dst)
     return result;
 }
 
-function InsertPicture(html, text, url_base)
+function InsertPicture(pluginPath, work_dir, html, text, url_base)
 {
-    var html_matchs = html.match(/<IMG src="index_files\/(.*)?.(png|jpg|jpeg|bmp|gif|ico)">/ig);
+    //var html_matchs = html.match(/<IMG src="index_files\/(.*)?.(png|jpg|jpeg|bmp|gif|ico)">/ig);
+	var html_matchs = [];
+	var scriptFile = pluginPath + "get_imgs.js";
+	var objBrowser = objApp.Window.CurrentDocumentBrowserObject;
+	objBrowser.ExecuteScriptFile(scriptFile, function(ret){
+  	    if(ret && ret.length > 0){
+		    for(var i = 0; i < ret.length; i++){
+			    html_matchs.push(ret[i]);  
+		    }
+	    }
+	});
 
     var text_matchs = text.match(/<img_location name="(.*)?">/ig);
 
@@ -61,12 +70,15 @@ function InsertPicture(html, text, url_base)
         return text;
     }
 
+	var image_dst_path = CombinePath(work_dir, url_base);
+	CopyPictures(html_matchs, image_dst_path);
+	
     var length = Math.min(html_matchs.length, text_matchs.length);
 
     for (i = 0; i < length; i++)
     {
         text = InsertLine( text, text_matchs[i] + "\n"
-            , "![" + GetPictureName(text_matchs[i]) + "](" + GetPictureUrl(url_base, html_matchs[i]) + ")\n");
+            , "![" + GetPictureName(text_matchs[i]) + "](" + GetPictureUrl(url_base, GetSrcFileName(html_matchs[i])) + ")\n");
     }
 
     return text;
@@ -92,37 +104,33 @@ function CreateFolders(fso, path)
     }
 }
 
-
-function CopyPictures(doc, local_path)
+function PrepareCopyPictures(local_path)
 {
     var fso = objApp.CreateActiveXObject("Scripting.FileSystemObject"); // 如果用new ActiveXObject("XXXX"); 则会弹出对话框让用户确认
-
-    var temp_file = objComm.GetATempFileName(".html");
-    doc.SaveToHtml(temp_file, 1);
-
-    var src_dir = temp_file.substr(0, temp_file.length - 5) + "_files";
-
-    if (!fso.FolderExists(src_dir))
-    {
-        return;
-    }
-
     CreateFolders(fso, local_path);
+	return fso;
+}
 
-    fso.CopyFolder(src_dir, local_path, true);
+function CopyFile(fso, src_file, local_path)
+{
+	fso.CopyFile(src_file, CombinePath(local_path, GetSrcFileName(src_file)), true);
+}
 
-    // 避免拷贝模板附带的文件，凡是带有[]的，都认为是模板的文件，不拷贝。
-    //var currentFolder = fso.GetFolder(src_dir);
-    /*var fileList = new Enumerator(currentFolder.files);  // only work in IE, not work in Chrome, because of security
-    var aFile;
-    for (; !fileList.atEnd(); fileList.moveNext())
-    {
-        aFile=fileList.item();
-        if (/[^\[\]]+.(png|jpg|jpeg|bmp|gif|ico)/i.test(aFile.Name))
-        {
-            fso.CopyFile(aFile.Path, CombinePath(local_path, aFile.Name), true);
-        }
-    }*/
+//https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
+function GetSrcFileName(src_file) 
+{
+	var splitTest = function (str) {
+        return str.split('\\').pop().split('/').pop();
+	}
+	return splitTest(src_file);
+}
 
-    //fso.CopyFolder(src_dir, CombinePath(local_path, "images/" + bare_file_name));
+function CopyPictures(src_files, local_path)
+{
+	var i = 0;
+    var fso = PrepareCopyPictures(local_path);
+	for (i = 0; i < src_files.length; i++)
+	{
+		CopyFile(fso, src_files[i], local_path);
+	}
 }

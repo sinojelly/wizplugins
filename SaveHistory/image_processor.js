@@ -6,6 +6,7 @@
 // Notice: (html comment will not show in all markdown engine)
 // 1) use <!-- pay2show product='id' -->  hidden content <!-- /pay2show -->
 // 2) use <!-- img_location name="picture_name" --> to specify the location of picture, each picture has a different picture_name.
+// 3) there should be a blank line before code begin identifier(```), or else the style on github is in a mess.
 //
 
 function CombinePath(path, file)

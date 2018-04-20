@@ -1,7 +1,12 @@
-// 1. Find "<img_location name="picture_name">"
+// 1. Find "<!-- img_location name="picture_name" -->"
 // 2. Find "<img src="index_files/94b373d7-5131-4385-b055-ac4921a54465.png">" in html content, picture file name is not fixed.
 // 3. Copy the picture to WizDocs/images/article_name/
 // 4. Insert ![picture_name](path/to/picture) after img_location.
+//
+// Notice: (html comment will not show in all markdown engine)
+// 1) use <!-- pay2show product='id' -->  hidden content <!-- /pay2show -->
+// 2) use <!-- img_location name="picture_name" --> to specify the location of picture, each picture has a different picture_name.
+//
 
 function CombinePath(path, file)
 {
@@ -33,7 +38,7 @@ function GetPictureUrl(url_base, html_tag) // html_tag is filename
 
 function GetPictureName(html_tag)
 {
-    return html_tag.substr(20, html_tag.length - 22);  // 去掉<img_location name="  和 ">
+    return html_tag.substr(24, html_tag.length - 29);  // 去掉<!-- img_location name="  和 " -->
 }
 
 //https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
@@ -98,8 +103,8 @@ function ConstructMarkdownContentAndSave(comment, html, text)
             }
         }
         
-        var text_matchs = text.match(/<img_location name="(.*)?">/ig);
-        if (html_matchs.length > 0 && text_matchs.length > 0) // 有图片
+        var text_matchs = text.match(/<!-- img_location name="(.*)?" -->/ig);
+        if (!(html_matchs == null || text_matchs == null)) // 有图片
         {
             text = InsertPicture(html_matchs, text_matchs, text);
         }
@@ -143,6 +148,7 @@ function CopyPictures(doc, local_path)
         return;
     }
 
+    fso.DeleteFolder(local_path);
     CreateFolders(fso, local_path);
 
     fso.CopyFolder(src_dir, local_path, true);

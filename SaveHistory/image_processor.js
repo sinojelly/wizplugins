@@ -36,6 +36,15 @@ function GetPictureName(html_tag)
     return html_tag.substr(20, html_tag.length - 22);  // 去掉<img_location name="  和 ">
 }
 
+//https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
+function GetSrcFileName(src_file) 
+{
+    var splitTest = function (str) {
+        return str.split('\\').pop().split('/').pop();
+    }
+    return splitTest(src_file);
+}
+
 // 把str中的src行后面添加一行dst
 function InsertLine(str, src, dst)
 {
@@ -49,22 +58,19 @@ function InsertLine(str, src, dst)
     return result;
 }
 
-function InsertPicture(work_dir, url_base, html_matchs, text_matchs, text)
+function InsertPicture(html_matchs, text_matchs, text)
 {
-    //var image_dst_path = CombinePath(work_dir, url_base);
-    //CopyPictures(html_matchs, image_dst_path);
-    
     var length = Math.min(html_matchs.length, text_matchs.length);
 
     for (i = 0; i < length; i++)
     {
         text = InsertLine( text, text_matchs[i] + "\n"
-            , "![" + GetPictureName(text_matchs[i]) + "](" + GetPictureUrl(url_base, GetSrcFileName(html_matchs[i])) + ")\n");
+            , "![" + GetPictureName(text_matchs[i]) + "](" + GetPictureUrl(pic_path, GetSrcFileName(html_matchs[i])) + ")\n");
     }
     return text;
 }
 
-function saveContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, text) 
+function saveContent(comment, text) 
 {
     try {
         objComm.SaveTextToFile(file_path, text, "UTF-8");
@@ -72,10 +78,14 @@ function saveContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, com
         alert("Write file (" + file_path + ") failed!");
         return;
     }
-    //objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + comment + "\"", true);  // return 0 - sucsess
+    
+    var image_dst_path = CombinePath(work_dir, pic_path)
+    CopyPictures(objDoc, image_dst_path);
+        
+    objComm.RunExe(pluginPath + commit_cmd, "\""+ tool_path + "\" \""+work_dir + "\" \"" + comment + "\"", true);  // return 0 - sucsess
 }
 
-function ConstructMarkdownContentAndSave(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, html, text, url_base)
+function ConstructMarkdownContentAndSave(comment, html, text)
 {
     //var html_matchs = html.match(/<IMG src="index_files\/(.*)?.(png|jpg|jpeg|bmp|gif|ico)">/ig);
     var html_matchs = [];
@@ -91,9 +101,11 @@ function ConstructMarkdownContentAndSave(pluginPath, work_dir, file_path, commit
         var text_matchs = text.match(/<img_location name="(.*)?">/ig);
         if (html_matchs.length > 0 && text_matchs.length > 0) // 有图片
         {
-            text = InsertPicture(work_dir, url_base, html_matchs, text_matchs, text);
+            text = InsertPicture(html_matchs, text_matchs, text);
         }
-        saveContent(pluginPath, work_dir, file_path, commit_cmd, tool_path, comment, text);
+        saveContent(comment, text);
+        
+        objApp.Window.CloseHtmlDialog(WizChromeBrowser, "ok");
     });
 }
 
@@ -115,16 +127,6 @@ function CreateFolders(fso, path)
     {
         fso.CreateFolder(arr[i]);
     }
-}
-
-
-//https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
-function GetSrcFileName(src_file) 
-{
-    var splitTest = function (str) {
-        return str.split('\\').pop().split('/').pop();
-    }
-    return splitTest(src_file);
 }
 
 function CopyPictures(doc, local_path)

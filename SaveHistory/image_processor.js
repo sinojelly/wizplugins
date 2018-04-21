@@ -4,8 +4,8 @@
 // 4. Insert ![picture_name](path/to/picture) after img_location.
 //
 // Notice: (html comment will not show in all markdown engine)
-// 1) use <!-- pay2show product='id' -->  hidden content <!-- /pay2show -->
-// 2) use <!-- img_location name="picture_name" --> to specify the location of picture, each picture has a different picture_name.
+// 1) use <pay2show id="5">  hidden content </pay2show>
+// 2) use <!--img_location name="picture_name"--> to specify the location of picture, each picture has a different picture_name.
 // 3) there should be a blank line before code begin identifier(```), or else the style on github is in a mess.
 //
 
@@ -39,7 +39,7 @@ function GetPictureUrl(url_base, html_tag) // html_tag is filename
 
 function GetPictureName(html_tag)
 {
-    return html_tag.substr(24, html_tag.length - 29);  // 去掉<!-- img_location name="  和 " -->
+    return html_tag.substr(23, html_tag.length - 27);  // 去掉<!--img_location name="  和 "-->
 }
 
 //https://stackoverflow.com/questions/423376/how-to-get-the-file-name-from-a-full-path-using-javascript
@@ -104,7 +104,7 @@ function ConstructMarkdownContentAndSave(comment, html, text)
             }
         }
         
-        var text_matchs = text.match(/<!-- img_location name="(.*)?" -->/ig);
+        var text_matchs = text.match(/<!--img_location name="(.*)?"-->/ig);
         if (!(html_matchs == null || text_matchs == null)) // 有图片
         {
             text = InsertPicture(html_matchs, text_matchs, text);

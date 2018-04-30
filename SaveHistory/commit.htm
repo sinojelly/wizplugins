@@ -110,12 +110,8 @@ hr {
 	<script src="image_processor.js"></script>
 </head>
 <body>
-<table>
-	    <tr>
-            <td id="labelComment" align="left">comment</td>
-            <td><input id="textComment" type="text" /></td>
-        </tr>
-</table>
+	<div id="labelComment" align="left">comment:</div>
+	<textarea id="textComment" style="width:250px;height:150px;border:solid 1px #00F; resize:none;"></textarea>
     <p align="left">
 	    <input type="button" onclick="okClicked();" value="OK" id="buttonOK" />
         <input type="button" onclick="cancelClicked();" value="Cancel" id="buttonCancel" />
